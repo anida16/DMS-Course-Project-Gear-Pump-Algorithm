@@ -1,4 +1,3 @@
-'''
 # Code for Displaying Images in Tkinter
 from tkinter import *
 from PIL import ImageTk, Image
@@ -10,4 +9,3 @@ myLabel = Label(image=img)
 myLabel.pack()
 
 root.mainloop()
-'''
