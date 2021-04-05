@@ -24,12 +24,7 @@ def errorFlag(errorMessage):
     OK_btn = Button(errorWindow, text='OK', width=15, bd=0, bg='white', pady=5, command=lambda: Root4.destroy())
     OK_btn.grid(row=2, column=1, padx=8, pady=5)
     time.sleep(2)
-    restart()
     Root4.mainloop()
-
-
-def restart():
-    pass
 
 
 def PSG_Database(database, value):  # centralised database
@@ -157,26 +152,31 @@ Input
 Discharge in LPM (Litre per minute) and Pressure (in bar)
 '''
 
-# Material Selection Drop Down
+# Material Selection Drop Down and Gear Material Database
 '''
-CI_Grade_20_bend = 50
-CI_Grade_20_tensile = 500
-CI_Grade_25_bend = 60
-CI_Grade_25_tensile = 600
-CI_Grade_35_bend = 60
-CI_Grade_35_tensile = 600
-CI_Grade_35_Heated_bend = 80
-CI_Grade_35_Heated_tensile = 750
-Steel_C45_bend = 140
-Steel_C45_tensile = 500
-Steel_15Ni_bend = 320
-Steel_15Ni_tensile = 950
-Steel_40Ni_bend = 400
-Steel_40Ni_tensile = 1100
+CI_Grade_20_Tensile = 500
+CI_Grade_20_Bending = 50
+
+CI_Grade_25_Tensile = 600
+CI_Grade_25_Bending = 60
+
+CI_Grade_35_Tensile = 600
+CI_Grade_35_Bending = 60
+
+CI_Grade_35_Heat_Treated_Tensile = 750
+CI_Grade_35_Heat_Treated_Bending = 80
+
+Steel_C45_Tensile = 500
+Steel_C45_Bending = 140
+
+Steel_15Ni2Cr1Mo15_Tensile = 950
+Steel_15Ni2Cr1Mo15_Bending = 320
+
+Steel_40Ni2Cr1Mo28_Tensile = 1100 #Rukhande Selected this, so in tkinter, keep default value as this @Anthony
+Steel_40Ni2Cr1Mo28_Bending = 400 #Rukhande Selected this, so in tkinter, keep default value as this @Anthony
 '''
-optList = ['CCI_Grade_20_bend', 'CI_Grade_20_tensile', 'CI_Grade_25_bend', 'CI_Grade_25_tensile', 'CI_Grade_35_bend',
-           'CI_Grade_35_tensile', 'CI_Grade_35_Heated_bend', 'CI_Grade_35_Heated_tensile', 'Steel_C45_bend',
-           'Steel_C45_tensile', 'Steel_15Ni_bend', 'Steel_15Ni_tensile', 'Steel_40Ni_bend', 'Steel_40Ni_tensile']
+
+optList = ['CCI_Grade_20', 'CI_Grade_25', 'CI_Grade_35', 'CI_Grade_35_Heated', 'Steel_C45', 'Steel_15Ni', 'Steel_40Ni']
 popupMenu = OptionMenu(inputWindow, material, *optList)
 
 # Input Boxes for the GUI Design
@@ -194,10 +194,12 @@ Label(inputWindow, text="Choose Material for Gear").grid(row=7, column=1)
 popupMenu.grid(row=7, column=2)  # controls position of popup grid
 
 # Submit button to end the input
+
+
 b1 = tk.Button(inputWindow, text='Submit', command=lambda: mainProgram())
 b1.grid(row=12, column=1)
 
-resetButton = tk.Button(inputWindow, text='Reset', command=lambda: restart())
+resetButton = tk.Button(inputWindow, text='Reset', command=lambda: exit())
 resetButton.grid(row=12, column=2)
 
 str_out = tk.StringVar(Root1)
@@ -210,61 +212,33 @@ str_out.set("Output")
 def mainProgram():
     # GUI widgets for Result and assumptions window
 
-    if material.get() == 'CCI_Grade_20_bend':
-        Bending_stress = 400
-        Tensile_Stress = 1100
+    if material.get() == 'CCI_Grade_20':
+        Tensile_Stress = 500
+        Bending_Stress = 50
         Modulus_Elasticity = 210000
-    elif material.get() == 'CI_Grade_20_tensile':
-        Bending_stress = 400
-        Tensile_Stress = 1100
+    elif material.get() == 'CI_Grade_25':
+        Tensile_Stress = 600
+        Bending_Stress = 60
         Modulus_Elasticity = 210000
-    elif material.get() == 'CI_Grade_25_bend':
-        Bending_stress = 400
-        Tensile_Stress = 1100
+    elif material.get() == 'CI_Grade_35':
+        Tensile_Stress = 600
+        Bending_Stress = 60
         Modulus_Elasticity = 210000
-    elif material.get() == 'CI_Grade_25_tensile':
-        Bending_stress = 400
-        Tensile_Stress = 1100
+    elif material.get() == 'CI_Grade_35_Heated':
+        Tensile_Stress = 750
+        Bending_Stress = 80
         Modulus_Elasticity = 210000
-    elif material.get() == 'CI_Grade_35_bend':
-        Bending_stress = 400
-        Tensile_Stress = 1100
+    elif material.get() == 'Steel_C45':
+        Tensile_Stress = 500
+        Bending_Stress = 140
         Modulus_Elasticity = 210000
-    elif material.get() == 'CI_Grade_35_tensile':
-        Bending_stress = 400
-        Tensile_Stress = 1100
+    elif material.get() == 'Steel_15Ni':
+        Tensile_Stress = 950
+        Bending_Stress = 320
         Modulus_Elasticity = 210000
-    elif material.get() == 'CI_Grade_35_Heated_bend':
-        Bending_stress = 400
+    elif material.get() == 'Steel_40Ni':
         Tensile_Stress = 1100
-        Modulus_Elasticity = 210000
-    elif material.get() == 'CI_Grade_35_Heated_tensile':
-        Bending_stress = 400
-        Tensile_Stress = 1100
-        Modulus_Elasticity = 210000
-    elif material.get() == 'Steel_C45_bend':
-        Bending_stress = 400
-        Tensile_Stress = 1100
-        Modulus_Elasticity = 210000
-    elif material.get() == 'Steel_C45_tensile':
-        Bending_stress = 400
-        Tensile_Stress = 1100
-        Modulus_Elasticity = 210000
-    elif material.get() == 'Steel_15Ni_bend':
-        Bending_stress = 400
-        Tensile_Stress = 1100
-        Modulus_Elasticity = 210000
-    elif material.get() == 'Steel_15Ni_tensile':
-        Bending_stress = 400
-        Tensile_Stress = 1100
-        Modulus_Elasticity = 210000
-    elif material.get() == 'Steel_40Ni_bend':
-        Bending_stress = 400
-        Tensile_Stress = 1100
-        Modulus_Elasticity = 210000
-    elif material.get() == 'Steel_40Ni_tensile':
-        Bending_stress = 400
-        Tensile_Stress = 1100
+        Bending_Stress = 400
         Modulus_Elasticity = 210000
     else:
         print("Error: Invalid material")
@@ -327,6 +301,7 @@ def mainProgram():
         print("Error: Standard Motor is not available in PSG")
         errorFlag('Standard Motor is not available in PSG')
         time.sleep(5)
+        Root2.destroy()
     print("corrected standard motor", Corrected_Standard_Motor)
 
     # We completely assume the Speed as 960RPM (Rukhande Sir said too), no mention anywhere
@@ -480,9 +455,9 @@ def mainProgram():
     Label(assumptionsWindow, text="").grid(row=10, column=4)  # Enter PSG Reference if possible or else leave blank
     # Step 3.1: Design of Gears
 
-    Bending_stress = 400
-    Tensile_Stress = 1100
-    Modulus_Elasticity = 210000
+    # Bending_Stress = 400
+    # Tensile_Stress = 1100
+    # Modulus_Elasticity = 210000
 
     # Assumptions:
     No_Teeth = 14
@@ -527,18 +502,18 @@ def mainProgram():
     Actual_Bending_Stress = (Torque * 2000) / (New_width * No_Teeth * Y1 * Corrected_Standard_Module ** 2)
     print("Actual_Bending_Stress", Actual_Bending_Stress)
 
-    if Actual_Bending_Stress > Bending_stress:
+    if Actual_Bending_Stress > Bending_Stress:
         print("Error: Failed at Bending")
         errorFlag('Failure at Bending')
         time.sleep(5)
 
-    elif Actual_Bending_Stress < Bending_stress:  # Remark: What if the two values are equal? pass or fail
+    elif Actual_Bending_Stress < Bending_Stress:  # Remark: What if the two values are equal? pass or fail
         print("###############Sucessfully passed Bending testing")
 
     # Test for Dynamic Load
     # PSG 8.50
 
-    Static_Force = (Bending_stress * New_width * Y1 * Corrected_Standard_Module) / 1000
+    Static_Force = (Bending_Stress * New_width * Y1 * Corrected_Standard_Module) / 1000
     print("Static Force", Static_Force)
 
     Velocity = (math.pi * Pitch_Diameter_D * Speed) / 60000
@@ -989,8 +964,6 @@ def mainProgram():
     Label(assumptionsWindow, text=" ").grid(row=19, column=3)       # Enter units for velocity of Delivery
     Label(assumptionsWindow, text="").grid(row=19, column=4)  # Enter PSG Reference if possible or else leave blank
 
-    Root2.mainloop()
-
     Diameter_of_Delivery = (((4 * Discharge) / (math.pi * Velocity_Delivery)) ** (1 / 2)) * 1000
     print("Diameter_of_Delivery = ", Diameter_of_Delivery)
 
@@ -1044,6 +1017,7 @@ def mainProgram():
     Label(resultWindow, text="mm").grid(row=7, column=3)  # Correct if unit is not 'mm'
 
     Root3.mainloop()
+    Root2.mainloop()
 
 
 Root1.mainloop()
