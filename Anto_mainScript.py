@@ -269,7 +269,7 @@ def mainProgram():
 
     # Transmission Unit image Display
     img = ImageTk.PhotoImage(Image.open(r"Transmission Unit.png"))
-    myLabel = Label(image=img)
+    myLabel = Label(resultWindow, image=img)
     myLabel.pack()
 
     # Assumptions Start
