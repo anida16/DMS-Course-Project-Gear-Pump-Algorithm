@@ -1,9 +1,13 @@
 import math
 import tkinter as tk
 from tkinter import *
+from pandas import DataFrame
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import time
 
 
+# Warning:- Sticky problem is not yet Resolved
 # Windows of the GUI :-
 #     Root1 -> Input Window
 #     Root2 -> Assumptions Window
@@ -142,7 +146,9 @@ inputWindow = Frame(Root1)
 inputWindow.grid(column=0, row=0, sticky=(N, W, E, S))
 inputWindow.columnconfigure(0, weight=1)
 inputWindow.rowconfigure(0, weight=1)
-inputWindow.pack(pady=60, padx=50)  # controls fixed gap inbetween main content and edges, pady for y padx for x
+inputWindow.pack(pady=60, padx=50)  # Controls fixed gap in between main content and edges, pady for y padx for x
+
+# Variables for GUI Window
 material = StringVar(Root1)  # this is where value selected by user is stored #Material Designation
 dischargeInput = tk.DoubleVar(Root1)
 pressureInput = tk.DoubleVar(Root1)
@@ -195,7 +201,6 @@ popupMenu.grid(row=7, column=2)  # controls position of popup grid
 
 # Submit button to end the input
 
-
 b1 = tk.Button(inputWindow, text='Submit', command=lambda: mainProgram())
 b1.grid(row=12, column=1)
 
@@ -211,7 +216,7 @@ str_out.set("Output")
 
 def mainProgram():
     # GUI widgets for Result and assumptions window
-
+    print("inside Main Program...")
     if material.get() == 'CCI_Grade_20':
         Tensile_Stress = 500
         Bending_Stress = 50
@@ -246,12 +251,20 @@ def mainProgram():
 
     Root2 = Tk()
     Root2.title("Assumptions")
+    Root3 = Tk()
+    Root3.title("Result")
 
     assumptionsWindow = Frame(Root2)
-    assumptionsWindow.grid(column=0, row=0, sticky=(W, N, E, S))    # PLEASE CORRECT THIS
+    assumptionsWindow.grid(column=0, row=0, sticky=(W, N, E, S))  # PLEASE CORRECT THIS
     assumptionsWindow.columnconfigure(0, weight=1)
     assumptionsWindow.rowconfigure(0, weight=1)
     assumptionsWindow.pack(pady=60, padx=50)
+
+    resultWindow = Frame(Root3)
+    resultWindow.grid(column=0, row=0, sticky=(W, N, E, S))
+    resultWindow.columnconfigure(0, weight=1)
+    resultWindow.rowconfigure(0, weight=1)
+    resultWindow.pack(pady=60, padx=50)
 
     # Assumptions Start
     Mech_efficiency = 0.93
@@ -260,18 +273,18 @@ def mainProgram():
 
     Label(assumptionsWindow, text="Mechanical Efficiency").grid(row=1, column=1)
     Label(assumptionsWindow, text=Mech_efficiency).grid(row=1, column=2)
-    Label(assumptionsWindow, text="").grid(row=1, column=3)     # Enter the units if possible or else leave blank
-    Label(assumptionsWindow, text="").grid(row=1, column=4)     # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="").grid(row=1, column=3)  # Enter the units if possible or else leave blank
+    Label(assumptionsWindow, text="").grid(row=1, column=4)  # Enter PSG Reference if possible or else leave blank
 
     Label(assumptionsWindow, text="Volumetric Efficiency").grid(row=2, column=1)
     Label(assumptionsWindow, text=Volumetric_Efficiency).grid(row=2, column=2)
-    Label(assumptionsWindow, text="").grid(row=2, column=3)     # Enter the units if possible or else leave blank
-    Label(assumptionsWindow, text="").grid(row=2, column=4)     # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="").grid(row=2, column=3)  # Enter the units if possible or else leave blank
+    Label(assumptionsWindow, text="").grid(row=2, column=4)  # Enter PSG Reference if possible or else leave blank
 
     Label(assumptionsWindow, text="Service Factor").grid(row=3, column=1)
     Label(assumptionsWindow, text=Service_Factor).grid(row=3, column=2)
-    Label(assumptionsWindow, text="").grid(row=3, column=3)     # Enter the units if possible or else leave blank
-    Label(assumptionsWindow, text="").grid(row=1, column=4)     # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="").grid(row=3, column=3)  # Enter the units if possible or else leave blank
+    Label(assumptionsWindow, text="").grid(row=1, column=4)  # Enter PSG Reference if possible or else leave blank
     # Assumptions Ends
 
     # Part 1: Drive Unit
@@ -693,11 +706,11 @@ def mainProgram():
     Label(assumptionsWindow, text="Clearance Shaft").grid(row=12, column=1)
     Label(assumptionsWindow, text=Clearance_Shaft).grid(row=12, column=2)
     Label(assumptionsWindow, text="mm").grid(row=12, column=3)
-    Label(assumptionsWindow, text="").grid(row=12, column=4)    # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="").grid(row=12, column=4)  # Enter PSG Reference if possible or else leave blank
 
     Label(assumptionsWindow, text="Shear Stress(PSG)").grid(row=13, column=1)
     Label(assumptionsWindow, text=Shear_Stress_PSG).grid(row=13, column=2)
-    Label(assumptionsWindow, text="N/mm2").grid(row=13, column=3)       # change unit if it's wrong
+    Label(assumptionsWindow, text="N/mm2").grid(row=13, column=3)  # change unit if it's wrong
     Label(assumptionsWindow, text="").grid(row=13, column=4)  # Enter PSG Reference if possible or else leave blank
 
     Span_Length = B + New_width + Clearance_Shaft
@@ -821,12 +834,12 @@ def mainProgram():
 
     Label(assumptionsWindow, text="Tensile Stress Casing").grid(row=14, column=1)
     Label(assumptionsWindow, text=Tensile_Stress_Casing).grid(row=14, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=14, column=3)       # Enter units
+    Label(assumptionsWindow, text=" ").grid(row=14, column=3)  # Enter units
     Label(assumptionsWindow, text="").grid(row=14, column=4)  # Enter PSG Reference if possible or else leave blank
 
     Label(assumptionsWindow, text="FoS for Casing").grid(row=15, column=1)
     Label(assumptionsWindow, text=FoS_Casing).grid(row=15, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=15, column=3)       # change unit if it's wrong
+    Label(assumptionsWindow, text=" ").grid(row=15, column=3)  # change unit if it's wrong
     Label(assumptionsWindow, text="").grid(row=15, column=4)  # Enter PSG Reference if possible or else leave blank
 
     Safe_Tensile_Stress_Casing = Tensile_Stress_Casing / FoS_Casing
@@ -941,7 +954,7 @@ def mainProgram():
 
     Label(assumptionsWindow, text="Velocity of Suction").grid(row=18, column=1)
     Label(assumptionsWindow, text=Velocity_Suction).grid(row=18, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=18, column=3)       # Enter units for velocity of Suction
+    Label(assumptionsWindow, text=" ").grid(row=18, column=3)  # Enter units for velocity of Suction
     Label(assumptionsWindow, text="").grid(row=18, column=4)  # Enter PSG Reference if possible or else leave blank
 
     Diameter_of_Suction = (((4 * Discharge) / (math.pi * Velocity_Suction)) ** (1 / 2)) * 1000
@@ -961,7 +974,7 @@ def mainProgram():
 
     Label(assumptionsWindow, text="Velocity of Delivery").grid(row=19, column=1)
     Label(assumptionsWindow, text=Velocity_Delivery).grid(row=19, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=19, column=3)       # Enter units for velocity of Delivery
+    Label(assumptionsWindow, text=" ").grid(row=19, column=3)  # Enter units for velocity of Delivery
     Label(assumptionsWindow, text="").grid(row=19, column=4)  # Enter PSG Reference if possible or else leave blank
 
     Diameter_of_Delivery = (((4 * Discharge) / (math.pi * Velocity_Delivery)) ** (1 / 2)) * 1000
@@ -975,18 +988,10 @@ def mainProgram():
     print("Actual_Delivery_Velocity = ", Actual_Delivery_Velocity)
 
     # Add a grid for Output
-    Root3 = Tk()
-    Root3.title("Result")
-
-    resultWindow = Frame(Root3)
-    resultWindow.grid(column=0, row=0, sticky=(W, N, E, S))
-    resultWindow.columnconfigure(0, weight=1)
-    resultWindow.rowconfigure(0, weight=1)
-    resultWindow.pack(pady=60, padx=50)
 
     Label(resultWindow, text="Coupling No.").grid(row=1, column=1)
     Label(resultWindow, text=Coupling_No).grid(row=1, column=2)
-    Label(resultWindow, text="").grid(row=1, column=3)      # Enter unit next to coupling No.
+    Label(resultWindow, text="").grid(row=1, column=3)  # Enter unit next to coupling No.
 
     Label(resultWindow, text="Amin").grid(row=2, column=1)
     Label(resultWindow, text=Amin).grid(row=2, column=2)
@@ -1015,6 +1020,30 @@ def mainProgram():
     Label(resultWindow, text="Diameter of Suction").grid(row=7, column=1)
     Label(resultWindow, text=G).grid(row=7, column=2)
     Label(resultWindow, text="mm").grid(row=7, column=3)  # Correct if unit is not 'mm'
+
+    # button that displays the plot
+    plot_button = Button(master=resultWindow, text="Plot", height=2, width=10, command=lambda: plot())
+    plot_button.pack()  # place the button in Results window
+
+    endReswindow = Button(master=resultWindow, text="End", height=2, width=10, command=lambda: resultWindow.destroy())
+    endReswindow.pack()
+
+    # Function to plot the graph
+    def plot():
+        # Setting up dataframe for graph plotting
+        graphData = {'Allowable Stress': [],
+                     'Actual Stress': []
+                     }
+        graphDataframe = DataFrame(graphData, columns=['Allowable Stress', 'Actual Stress'])
+
+        # Ploting the graph
+        figure = plt.Figure(figsize=(5, 4), dpi=100)
+        ax = figure.add_subplot(111)
+        line = FigureCanvasTkAgg(figure, resultWindow)
+        line.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+        graphDataframe = graphDataframe[['Year', 'Unemployment_Rate']].groupby('Year').sum()
+        graphDataframe.plot(kind='line', legend=True, ax=ax, color='r', marker='o', fontsize=10)
+        ax.set_title('Allowable Stress Vs. Actual Stress')
 
     Root3.mainloop()
     Root2.mainloop()
