@@ -1,6 +1,7 @@
 import math
 import tkinter as tk
 from tkinter import *
+from PIL import ImageTk, Image
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -265,6 +266,11 @@ def mainProgram():
     resultWindow.columnconfigure(0, weight=1)
     resultWindow.rowconfigure(0, weight=1)
     resultWindow.pack(pady=60, padx=50)
+
+    # Transmission Unit image Display
+    img = ImageTk.PhotoImage(Image.open(r"Transmission Unit.png"))
+    myLabel = Label(image=img)
+    myLabel.pack()
 
     # Assumptions Start
     Mech_efficiency = 0.93
