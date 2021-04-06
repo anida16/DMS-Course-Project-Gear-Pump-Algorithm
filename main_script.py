@@ -96,6 +96,7 @@ Coupler_Proportions = ({
 })
 
 Standard_Max_rating = range_index(Coupler_Proportions, KW_per_100_RPM)
+print("First Standard Max Rating", Standard_Max_rating)
 
 if Standard_Max_rating is 0.4:
     Coupling_No = 1
@@ -187,7 +188,7 @@ if Standard_Max_rating is 74.0:
     E = 100
     G = 60
 
-#print(Coupling_No)
+print("First Coupling NO", Coupling_No)
 
 #PSG 7.108 End
 
@@ -382,6 +383,7 @@ C_inkgf = C*100
 print("C_inkgf",C_inkgf)
 
 New_Outer_Diameter_Do = Root_Diameter_Df + 10
+print("New_Outer_Diameter_Do",New_Outer_Diameter_Do)
 
 #Database for Needle Bearing, RNA69 Series (without Inner Race)
 
@@ -400,7 +402,7 @@ Bearing_Dia_check = ({
 
 
 Corrected_Diameter_Do = range_index1(Bearing_Dia_check, New_Outer_Diameter_Do)
-print("Corrected_Diameter_Do",Corrected_Diameter_Do)
+
 
 if Corrected_Diameter_Do is 52:
     C_PSG = 4100
@@ -498,17 +500,39 @@ if Corrected_Diameter_Do is 125:
         print("Dr",Dr)
         Bearing = "RNA 6918"
 
-print(Bearing)
+print("Corrected_Diameter_Do",Corrected_Diameter_Do)
+if Corrected_Diameter_Do > New_Outer_Diameter_Do:
+    print("No suitable Needle Bearing Available, so selecting Sliding Contact bearing")
 
-#Step 3.3: Shaft Design
+    New_New_Outer_Diameter_Do = New_Outer_Diameter_Do - 2
+    Journal_Diameter = New_New_Outer_Diameter_Do - 4
 
-#Assumptions:
-Clearance_Shaft = 10
+    #Assumption, 
+    Pressure_Journal_Bearing = 1.4      #from PSG 7.31
+    Bearing_length = (Radial_Force * 1000)/(Pressure_Journal_Bearing * Journal_Diameter)
+    New_bearing_Length = (math.ceil(Bearing_length/10))*10
+    print("New_bearing_Length", New_bearing_Length)
+    
+    Bearing_span = New_bearing_Length + New_width
+    print("Bearing_span",Bearing_span)
+
+    Max_Bending_Moment_temp = (2 * Radial_Force * 1000 * Bearing_span)/4
+    Max_Bending_Moment = Max_Bending_Moment_temp/1000
+    print("Max_Bending_Moment",Max_Bending_Moment)
+
+if Corrected_Diameter_Do < New_Outer_Diameter_Do:
+    print(Bearing)
+
+    #Step 3.3: Shaft Design
+
+    #Assumptions:
+    Clearance_Shaft = 10
+    
+
+    Span_Length = B + New_width + Clearance_Shaft
+    Max_Bending_Moment = (Resultant_Force * 1000 * Span_Length)/4
+
 Shear_Stress_PSG = 45
-
-Span_Length = B + New_width + Clearance_Shaft
-Max_Bending_Moment = (Resultant_Force * 1000 * Span_Length)/4
-
 Equivalent_Torque = math.sqrt((Torque**2) + (Max_Bending_Moment**2))
 print("Equivalent_Torque",Equivalent_Torque)
 
@@ -520,128 +544,130 @@ if Shear_Stress_PSG > Shear_Stress_Actual:
 if Shear_Stress_PSG < Shear_Stress_Actual:
     print("############## Shaft failure due to Shear")
 
-New_Coupling_Range = ({
-(12, 16): 1,
-(16, 22): 2, 
-(22, 30): 3,
-(30, 45): 4,
-(45, 56): 5,
-(56, 75): 6,
-(75, 85): 7, 
-(85, 110): 8,
-(110, 130): 9,
-(130, 150): 10
-})
+if Corrected_Diameter_Do < New_Outer_Diameter_Do:
+    New_Coupling_Range = ({
+    (12, 16): 1,
+    (16, 22): 2, 
+    (22, 30): 3,
+    (30, 45): 4,
+    (45, 56): 5,
+    (56, 75): 6,
+    (75, 85): 7, 
+    (85, 110): 8,
+    (110, 130): 9,
+    (130, 150): 10
+    })
 
-Coupling_No_New = range_index1(New_Coupling_Range, Dr)
+    Coupling_No_New = range_index1(New_Coupling_Range, Dr)
 
 
-if Coupling_No_New is 1:
-    Standard_Max_rating = 0.4
-    Coupling_No = 1
-    Amin = 12
-    Amax = 16
-    B = 80
-    C = 25
-    E = 28
-    G = 18
+    if Coupling_No_New is 1:
+        Standard_Max_rating = 0.4
+        Coupling_No = 1
+        Amin = 12
+        Amax = 16
+        B = 80
+        C = 25
+        E = 28
+        G = 18
 
-if Coupling_No_New is 2:
-    Standard_Max_rating = 0.6
-    Coupling_No = 2
-    Amin = 16
-    Amax = 22
-    B = 100
-    C = 30
-    E = 30
-    G = 20
+    if Coupling_No_New is 2:
+        Standard_Max_rating = 0.6
+        Coupling_No = 2
+        Amin = 16
+        Amax = 22
+        B = 100
+        C = 30
+        E = 30
+        G = 20
 
-if Coupling_No_New is 3:
-    Standard_Max_rating = 0.8
-    Coupling_No = 3
-    Amin = 22
-    Amax = 30
-    B = 112
-    C = 38
-    E = 32
-    G = 22
+    if Coupling_No_New is 3:
+        Standard_Max_rating = 0.8
+        Coupling_No = 3
+        Amin = 22
+        Amax = 30
+        B = 112
+        C = 38
+        E = 32
+        G = 22
 
-if Coupling_No_New is 4:
-    Standard_Max_rating = 2.5
-    Coupling_No = 4
-    Amin = 30
-    Amax = 45
-    B = 132
-    C = 55
-    E = 40
-    G = 30
+    if Coupling_No_New is 4:
+        Standard_Max_rating = 2.5
+        Coupling_No = 4
+        Amin = 30
+        Amax = 45
+        B = 132
+        C = 55
+        E = 40
+        G = 30
 
-if Coupling_No_New is 5:
-    Standard_Max_rating = 4.0
-    Coupling_No = 5
-    Amin = 45
-    Amax = 56
-    B = 170
-    C = 80
-    E = 45
-    G = 35
+    if Coupling_No_New is 5:
+        Standard_Max_rating = 4.0
+        Coupling_No = 5
+        Amin = 45
+        Amax = 56
+        B = 170
+        C = 80
+        E = 45
+        G = 35
 
-if Coupling_No_New is 6:
-    Standard_Max_rating = 6.0
-    Coupling_No = 6
-    Amin = 56
-    Amax = 75
-    B = 200
-    C = 100
-    E = 56
-    G = 40
+    if Coupling_No_New is 6:
+        Standard_Max_rating = 6.0
+        Coupling_No = 6
+        Amin = 56
+        Amax = 75
+        B = 200
+        C = 100
+        E = 56
+        G = 40
 
-if Coupling_No_New is 7:
-    Standard_Max_rating = 16.0
-    Coupling_No = 7
-    Amin = 75
-    Amax = 85
-    B = 250
-    C = 140
-    E = 63
-    G = 45
+    if Coupling_No_New is 7:
+        Standard_Max_rating = 16.0
+        Coupling_No = 7
+        Amin = 75
+        Amax = 85
+        B = 250
+        C = 140
+        E = 63
+        G = 45
 
-if Coupling_No_New is 8:
-    Standard_Max_rating = 25.0
-    Coupling_No = 8
-    Amin = 85
-    Amax = 110
-    B = 315
-    C = 180
-    E = 80
-    G = 50
+    if Coupling_No_New is 8:
+        Standard_Max_rating = 25.0
+        Coupling_No = 8
+        Amin = 85
+        Amax = 110
+        B = 315
+        C = 180
+        E = 80
+        G = 50
 
-if Coupling_No_New is 9:
-    Standard_Max_rating = 52.0
-    Coupling_No = 9
-    Amin = 110
-    Amax = 130
-    B = 400
-    C = 212
-    E = 90
-    G = 56
+    if Coupling_No_New is 9:
+        Standard_Max_rating = 52.0
+        Coupling_No = 9
+        Amin = 110
+        Amax = 130
+        B = 400
+        C = 212
+        E = 90
+        G = 56
 
-if Coupling_No_New is 10:
-    Standard_Max_rating = 74.0
-    Coupling_No = 10
-    Amin = 130
-    Amax = 150
-    B = 500
-    C = 280
-    E = 100
-    G = 60
+    if Coupling_No_New is 10:
+        Standard_Max_rating = 74.0
+        Coupling_No = 10
+        Amin = 130
+        Amax = 150
+        B = 500
+        C = 280
+        E = 100
+        G = 60
 
-print("Coupling_No_New",Coupling_No_New)
-print("Standard_Max_rating",Standard_Max_rating)
+    print("Coupling_No_New",Coupling_No_New)
+    print("Standard_Max_rating",Standard_Max_rating)
+
 #Step 3.4: Casing
 
 #Assumptions:
-Tensile_Stress_Casing = 200
+Tensile_Stress_Casing = 180
 FoS_Casing = 6
 Safe_Tensile_Stress_Casing = Tensile_Stress_Casing/FoS_Casing
 
@@ -663,19 +689,22 @@ Bolt_Dia_Dict = {
     "M36": 36
 }
 
-Bolt_diameter = Bolt_Dia_Dict["M12"]
+Bolt_diameter = Bolt_Dia_Dict["M16"]
 
 #By Thick Cylinder Theory:
-Thickness_Casing = (Corrected_Diameter_Do/2)*(((Safe_Tensile_Stress_Casing+Pmax)/(Safe_Tensile_Stress_Casing-Pmax))**(1/2) -1)
+# this theory might be wrong - for first numerical Corrected_Diameter and second numerical Outer_Diameter_Do
+Thickness_Casing = (Outer_Diameter_Do/2)*(((Safe_Tensile_Stress_Casing+Pmax)/(Safe_Tensile_Stress_Casing-Pmax))**(1/2) -1)
 print("Thickness_Casing",Thickness_Casing)
 
 Final_Thickness_Casing = math.ceil(Thickness_Casing / 2.) * 2 
 print("Final_Thickness_Casing",Final_Thickness_Casing)
 
-C_casing = Corrected_Diameter_Do + Pitch_Diameter_D
+C_casing = Outer_Diameter_Do + Pitch_Diameter_D
 PCD_casing = C_casing + 3 * Bolt_diameter
 Outer_Diameter_Casing = PCD_casing + 3 * Bolt_diameter
-
+print("C_casing",C_casing)
+print("PCD_casing",PCD_casing)
+print("Outer_Diameter_Casing",Outer_Diameter_Casing)
 
 #Step 3.5: Fasteners/ Bolts
 
@@ -688,7 +717,7 @@ Stiffness_External = 0.67
 
 Design_Pressure = 1.2*Pressure_in_N_mm2
 Openning_Pressure = 1.5*Pressure_in_N_mm2
-Projected_Area = ((math.pi/4)*(Outer_Diameter_Do)**2) + Outer_Diameter_Do * 56
+Projected_Area = ((math.pi/4)*(Outer_Diameter_Do)**2) + Outer_Diameter_Do * Pitch_Diameter_D
 print("Project Area", Projected_Area)
 
 External_Force_Fe = Design_Pressure*Projected_Area
@@ -723,18 +752,18 @@ Bolt_Dict = {
     "M36": 817
 }
 
-Actual_Tensile_Bolt = Net_Force_Bolt_Fb/(PCD_Holes*Bolt_Dict["M12"])
-print("Actual_Tensile_Bolt",Actual_Tensile_Bolt)
+Actual_Tensile_Bolt = Net_Force_Bolt_Fb/(PCD_Holes*Bolt_Dict["M16"])
+print("First Actual_Tensile_Bolt",Actual_Tensile_Bolt)
 
 while Actual_Tensile_Bolt > Tensile_Stress_Fastener:
     PCD_Holes = PCD_Holes + 1
     #print(PCD_Holes)
-    Actual_Tensile_Bolt = Net_Force_Bolt_Fb/(PCD_Holes*Bolt_Dict["M12"])
-#
+    Actual_Tensile_Bolt = Net_Force_Bolt_Fb/(PCD_Holes*Bolt_Dict["M16"])
+
 if Actual_Tensile_Bolt < Tensile_Stress_Fastener:
     print("No. of Bolt Holes in casing would be ",PCD_Holes)
 
-print("Actual_Tensile_Bolt",Actual_Tensile_Bolt)
+print("Final Actual_Tensile_Bolt",Actual_Tensile_Bolt)
 
 
 #Part 3 End: Pump Unit
@@ -764,7 +793,7 @@ print("Diameter_of_Suction",Diameter_of_Suction)
 Corrected_Pipe_Dia_inch = range_index(Standard_Pipe_Dia, Diameter_of_Suction)
 
 Corrected_Pipe_Dia_mm = 25.4*Corrected_Pipe_Dia_inch
-print(Corrected_Pipe_Dia_mm)
+print("(Standard) Corrected_Pipe_Dia_mm",Corrected_Pipe_Dia_mm)
 
 Actual_Suction_Velocity = (4*Corrected_Discharge*1000000)/(math.pi*(Corrected_Pipe_Dia_mm)**(2))
 print("Actual_Suction_Velocity",Actual_Suction_Velocity)
@@ -780,7 +809,7 @@ print("Diameter_of_Delivery",Diameter_of_Delivery)
 Corrected_Pipe_Dia_inch2 = range_index(Standard_Pipe_Dia, Diameter_of_Delivery)
 
 Corrected_Pipe_Dia_mm2 = 25.4*Corrected_Pipe_Dia_inch2
-print(Corrected_Pipe_Dia_mm2)
+print("(Standard) Corrected_Pipe_Dia_mm", Corrected_Pipe_Dia_mm2)
 
 Actual_Delivery_Velocity = (4*Corrected_Discharge*1000000)/(math.pi*(Corrected_Pipe_Dia_mm2)**(2))
 print("Actual_Delivery_Velocity",Actual_Delivery_Velocity)
