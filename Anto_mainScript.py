@@ -153,7 +153,7 @@ inputWindow.pack(pady=60, padx=50)  # Controls fixed gap in between main content
 material = StringVar(Root1)  # this is where value selected by user is stored #Material Designation
 dischargeInput = tk.DoubleVar(Root1)
 pressureInput = tk.DoubleVar(Root1)
-
+inputBoltdia = tk.StringVar(Root1)
 '''
 Input
 Discharge in LPM (Litre per minute) and Pressure (in bar)
@@ -182,9 +182,27 @@ Steel_15Ni2Cr1Mo15_Bending = 320
 Steel_40Ni2Cr1Mo28_Tensile = 1100 #Rukhande Selected this, so in tkinter, keep default value as this @Anthony
 Steel_40Ni2Cr1Mo28_Bending = 400 #Rukhande Selected this, so in tkinter, keep default value as this @Anthony
 '''
+materialList = ['CCI_Grade_20', 'CI_Grade_25', 'CI_Grade_35', 'CI_Grade_35_Heated', 'Steel_C45', 'Steel_15Ni', 'Steel_40Ni']
+popupMenu = OptionMenu(inputWindow, material, *materialList)
 
-optList = ['CCI_Grade_20', 'CI_Grade_25', 'CI_Grade_35', 'CI_Grade_35_Heated', 'Steel_C45', 'Steel_15Ni', 'Steel_40Ni']
-popupMenu = OptionMenu(inputWindow, material, *optList)
+'''
+    "M2.5": 2.5,
+    "M3": 3,
+    "M4": 4,
+    "M5": 5,
+    "M6": 6,
+    "M8": 8,
+    "M10": 10,
+    "M12": 12,
+    "M16": 16,
+    "M20": 20,
+    "M24": 24,
+    "M30": 30,
+    "M33": 33,
+    "M36": 36
+'''
+boltList = ['M2.5', 'M3', 'M4', 'M5', 'M6', 'M8', 'M10', 'M12', 'M16', 'M20', 'M24', 'M30', 'M33', 'M36']
+boltMenu = OptionMenu(inputWindow, inputBoltdia, *boltList)
 
 # Input Boxes for the GUI Design
 # Discharge and Input Pressure
@@ -200,12 +218,14 @@ pressureInput.grid(row=2, column=2)
 Label(inputWindow, text="Choose Material for Gear").grid(row=7, column=1)
 popupMenu.grid(row=7, column=2)  # controls position of popup grid
 
+Label(inputWindow, text="Choose Diameter of Bolt").grid(row=8, column=1)
+boltMenu.grid(row=8, column=2)  # controls position of popup grid
 # Submit button to end the input
 
 b1 = tk.Button(inputWindow, text='Submit', command=lambda: mainProgram())
 b1.grid(row=12, column=1)
 
-resetButton = tk.Button(inputWindow, text='Reset', command=lambda: exit())
+resetButton = tk.Button(inputWindow, text='Exit', command=lambda: exit())
 resetButton.grid(row=12, column=2)
 
 str_out = tk.StringVar(Root1)
@@ -249,6 +269,52 @@ def mainProgram():
     else:
         print("Error: Invalid material")
         errorFlag('Invalid material')
+
+    if inputBoltdia == 'M2.5':
+        Bolt_diameter = 2.5
+        boltDia2 = 3.39
+    elif inputBoltdia == 'M3':
+        Bolt_diameter = 3
+        boltDia2 = 5.03
+    elif inputBoltdia == 'M4':
+        Bolt_diameter = 4
+        boltDia2 = 8.78
+    elif inputBoltdia == 'M5':
+        Bolt_diameter = 5
+        boltDia2 = 14.2
+    elif inputBoltdia == 'M6':
+        Bolt_diameter = 6
+        boltDia2 = 20.1
+    elif inputBoltdia == 'M8':
+        Bolt_diameter = 8
+        boltDia2 = 36.6
+    elif inputBoltdia == 'M10':
+        Bolt_diameter = 10
+        boltDia2 = 58
+    elif inputBoltdia == 'M12':
+        Bolt_diameter = 12
+        boltDia2 = 84.3
+    elif inputBoltdia == 'M16':
+        Bolt_diameter = 16
+        boltDia2 = 157
+    elif inputBoltdia == 'M20':
+        Bolt_diameter = 16
+        boltDia2 = 245
+    elif inputBoltdia == 'M24':
+        Bolt_diameter = 24
+        boltDia2 = 353
+    elif inputBoltdia == 'M30':
+        Bolt_diameter = 30
+        boltDia2 = 561
+    elif inputBoltdia == 'M33':
+        Bolt_diameter = 33
+        boltDia2 = 694
+    elif inputBoltdia == 'M36':
+        Bolt_diameter = 36
+        boltDia2 = 817
+    else:
+        print("Invalid Bolt type!!!")
+        errorFlag('Invalid Bolt type!!!')
 
     Root2 = Tk()
     Root2.title("Assumptions")
@@ -850,24 +916,7 @@ def mainProgram():
 
     Safe_Tensile_Stress_Casing = Tensile_Stress_Casing / FoS_Casing
 
-    Bolt_Dia_Dict = {
-        "M2.5": 2.5,
-        "M3": 3,
-        "M4": 4,
-        "M5": 5,
-        "M6": 6,
-        "M8": 8,
-        "M10": 10,
-        "M12": 12,
-        "M16": 16,
-        "M20": 20,
-        "M24": 24,
-        "M30": 30,
-        "M33": 33,
-        "M36": 36
-    }
-
-    Bolt_diameter = Bolt_Dia_Dict["M12"]
+    # Bolt Dia is selected by user and is set in beginning of main program function
 
     # By Thick Cylinder Theory:
     Thickness_Casing = (Corrected_Diameter_Do / 2) * (
@@ -918,30 +967,13 @@ def mainProgram():
 
     PCD_Holes = 1
 
-    Bolt_Dict = {
-        "M2.5": 3.39,
-        "M3": 5.03,
-        "M4": 8.78,
-        "M5": 14.2,
-        "M6": 20.1,
-        "M8": 36.6,
-        "M10": 58,
-        "M12": 84.3,
-        "M16": 157,
-        "M20": 245,
-        "M24": 353,
-        "M30": 561,
-        "M33": 694,
-        "M36": 817
-    }
-
-    Actual_Tensile_Bolt = Net_Force_Bolt_Fb / (PCD_Holes * Bolt_Dict["M12"])
+    Actual_Tensile_Bolt = Net_Force_Bolt_Fb / (PCD_Holes * boltDia2)
     print("Actual_Tensile_Bolt", Actual_Tensile_Bolt)
 
     while Actual_Tensile_Bolt > Tensile_Stress_Fastener:
         PCD_Holes = PCD_Holes + 1
         # print(PCD_Holes)
-        Actual_Tensile_Bolt = Net_Force_Bolt_Fb / (PCD_Holes * Bolt_Dict["M12"])
+        Actual_Tensile_Bolt = Net_Force_Bolt_Fb / (PCD_Holes * boltDia2)
     #
     if Actual_Tensile_Bolt < Tensile_Stress_Fastener:
         print("No. of Bolt Holes in casing would be ", PCD_Holes)
@@ -982,6 +1014,15 @@ def mainProgram():
     Label(assumptionsWindow, text=Velocity_Delivery).grid(row=19, column=2)
     Label(assumptionsWindow, text=" ").grid(row=19, column=3)  # Enter units for velocity of Delivery
     Label(assumptionsWindow, text="").grid(row=19, column=4)  # Enter PSG Reference if possible or else leave blank
+
+    Label(assumptionsWindow, text="Modulus of Elasticity").grid(row=20, column=1)
+    Label(assumptionsWindow, text=Modulus_Elasticity).grid(row=20, column=2)
+    Label(assumptionsWindow, text="N/mm2").grid(row=20, column=3)  # Enter units for velocity of Delivery
+    Label(assumptionsWindow, text="").grid(row=20, column=4)  # Enter PSG Reference if possible or else leave blank
+
+    endAssumptionwindow = Button(master=resultWindow, text="End", height=2, width=10,
+                          command=lambda: assumptionsWindow.destroy())
+    endAssumptionwindow.pack()
 
     Diameter_of_Delivery = (((4 * Discharge) / (math.pi * Velocity_Delivery)) ** (1 / 2)) * 1000
     print("Diameter_of_Delivery = ", Diameter_of_Delivery)
@@ -1051,8 +1092,8 @@ def mainProgram():
         graphDataframe.plot(kind='line', legend=True, ax=ax, color='r', marker='o', fontsize=10)
         ax.set_title('Allowable Stress Vs. Actual Stress')
 
-    Root3.mainloop()
     Root2.mainloop()
+    Root3.mainloop()
 
 
 Root1.mainloop()
