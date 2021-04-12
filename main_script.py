@@ -239,6 +239,10 @@ Modulus_Elasticity = 210000
 #Assumptions:
 No_Teeth = 14
 
+print("Discharge",Discharge)
+print("Speed", Speed)
+print("Volumetric_Efficiency",Volumetric_Efficiency)
+
 Module_in_mm = (((Discharge*4)/(Speed*7*Volumetric_Efficiency*math.pi*112*1000))**(1/3))*1000
 print(Module_in_mm)
 #PSG PAge 8.2 Start
