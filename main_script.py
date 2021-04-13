@@ -285,13 +285,15 @@ print("Width", New_width)
 
 #Test for Bending
 
-Y1 = math.pi*(0.175-(0.95/No_Teeth))
+Y1 = math.pi*(0.154-(0.912/No_Teeth))
 print("Y1",Y1)
 
 Torque = (Corrected_Standard_Motor * 1000* 60)/(2*2*math.pi*Speed)
 print("Torque",Torque)
 
-Actual_Bending_Stress = (Torque * 2000)/(New_width*No_Teeth*Y1*Corrected_Standard_Module**2)
+b_by_m = New_width/Corrected_Standard_Module
+
+Actual_Bending_Stress = (Torque * 2000)/(b_by_m*No_Teeth*Y1*(Corrected_Standard_Module)**(3))
 print("Actual_Bending_Stress",Actual_Bending_Stress)
 
 if Actual_Bending_Stress > Bending_stress:
@@ -311,7 +313,9 @@ print("Static Force", Static_Force)
 Velocity = (math.pi*Pitch_Diameter_D*Speed)/60000
 print("Velocity", Velocity)
 
-Barth_Velocity = (Corrected_Standard_Motor + Velocity**(1/2))/Corrected_Standard_Motor
+print("Corrected_Standard_Motor",Corrected_Standard_Motor)
+
+Barth_Velocity = (5.5 + Velocity**(1/2))/5.5
 print("Barth velocity", Barth_Velocity)
 
 Tangential_Load = (Corrected_Standard_Motor)/Velocity
@@ -329,6 +333,7 @@ if Static_Force > Dynamic_Force:
 #Test for Pitting Failure
 
 # From PSG 8.13
+
 Actual_Tensile_Stress = (0.74*(Gear_Ratio+1)*(Torque*1000*Modulus_Elasticity*(Gear_Ratio+1)/(New_width))**(1/2))/Pitch_Diameter_D
 print("Actual Tensile Stress", Actual_Tensile_Stress)
 
@@ -540,7 +545,7 @@ Shear_Stress_PSG = 45
 Equivalent_Torque = math.sqrt((Torque**2) + (Max_Bending_Moment**2))
 print("Equivalent_Torque",Equivalent_Torque)
 
-Shear_Stress_Actual = 16*Equivalent_Torque/((math.pi)*Dr**(3))
+Shear_Stress_Actual = (16000*Equivalent_Torque)/((math.pi)*(Root_Diameter_Df**(3)))
 print("Shear_Stress_Actual", Shear_Stress_Actual)
 if Shear_Stress_PSG > Shear_Stress_Actual:
     print("############## Sucessfully passed Shaft-Shear Failure Test")
