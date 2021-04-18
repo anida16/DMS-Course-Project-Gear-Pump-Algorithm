@@ -1,19 +1,21 @@
 import math
 import tkinter as tk
 from tkinter import *
+import time
 from PIL import ImageTk, Image
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import time
 
 
-# Warning:- Sticky problem is not yet Resolved
 # Windows of the GUI :-
 #     Root1 -> Input Window
 #     Root2 -> Assumptions Window
 #     Root3 -> Results Window
 #     Root4 -> Error Window
+#     Root5 -> Actual vs PSG Stresses
+
+
 def errorFlag(errorMessage):
     Root4 = Tk()
     Root4.title("Error Window")
@@ -30,6 +32,13 @@ def errorFlag(errorMessage):
     OK_btn.grid(row=2, column=1, padx=8, pady=5)
     time.sleep(2)
     Root4.mainloop()
+
+
+def displayImage():
+    img = ImageTk.PhotoImage(Image.open(r"Transmission Unit.png"))
+    myLabel = Label(image=img)
+    myLabel.pack()
+    Root1.mainloop()
 
 
 def PSG_Database(database, value):  # centralised database
@@ -119,8 +128,44 @@ def PSG_Database(database, value):  # centralised database
             (50.8, 76.2): 3,
             (76.2, 101.6): 4,
             (101.6, 152.4): 6
-        })
+         })
         return range_index(standardPipedia, value)
+    elif database == 'Bolt Dia Dict':
+        Bolt_Dia_Dict = {
+            "M2.5": 2.5,
+            "M3": 3,
+            "M4": 4,
+            "M5": 5,
+            "M6": 6,
+            "M8": 8,
+            "M10": 10,
+            "M12": 12,
+            "M16": 16,
+            "M20": 20,
+            "M24": 24,
+            "M30": 30,
+            "M33": 33,
+            "M36": 36
+        }
+        return Bolt_Dia_Dict[value]
+    elif database == 'Bolt Dict':
+        Bolt_Dict = {
+            "M2.5": 3.39,
+            "M3": 5.03,
+            "M4": 8.78,
+            "M5": 14.2,
+            "M6": 20.1,
+            "M8": 36.6,
+            "M10": 58,
+            "M12": 84.3,
+            "M16": 157,
+            "M20": 245,
+            "M24": 353,
+            "M30": 561,
+            "M33": 694,
+            "M36": 817
+        }
+        return Bolt_Dict[value]
     else:
         print("Error: Invalid value passed.")
         return -1
@@ -147,62 +192,44 @@ inputWindow = Frame(Root1)
 inputWindow.grid(column=0, row=0, sticky=(N, W, E, S))
 inputWindow.columnconfigure(0, weight=1)
 inputWindow.rowconfigure(0, weight=1)
-inputWindow.pack(pady=60, padx=50)  # Controls fixed gap in between main content and edges, pady for y padx for x
+inputWindow.pack(pady=10, padx=50)  # controls fixed gap inbetween main content and edges, pady for y padx for x
 
-# Variables for GUI Window
-material = StringVar(Root1)  # this is where value selected by user is stored #Material Designation
 dischargeInput = tk.DoubleVar(Root1)
 pressureInput = tk.DoubleVar(Root1)
-inputBoltdia = tk.StringVar(Root1)
+
 '''
 Input
 Discharge in LPM (Litre per minute) and Pressure (in bar)
 '''
 
-# Material Selection Drop Down and Gear Material Database
+# Material Selection Drop Down
 '''
-CI_Grade_20_Tensile = 500
-CI_Grade_20_Bending = 50
-
-CI_Grade_25_Tensile = 600
-CI_Grade_25_Bending = 60
-
-CI_Grade_35_Tensile = 600
-CI_Grade_35_Bending = 60
-
-CI_Grade_35_Heat_Treated_Tensile = 750
-CI_Grade_35_Heat_Treated_Bending = 80
-
-Steel_C45_Tensile = 500
-Steel_C45_Bending = 140
-
-Steel_15Ni2Cr1Mo15_Tensile = 950
-Steel_15Ni2Cr1Mo15_Bending = 320
-
-Steel_40Ni2Cr1Mo28_Tensile = 1100 #Rukhande Selected this, so in tkinter, keep default value as this @Anthony
-Steel_40Ni2Cr1Mo28_Bending = 400 #Rukhande Selected this, so in tkinter, keep default value as this @Anthony
+CI_Grade_20_bend = 50
+CI_Grade_20_tensile = 500
+CI_Grade_25_bend = 60
+CI_Grade_25_tensile = 600
+CI_Grade_35_bend = 60
+CI_Grade_35_tensile = 600
+CI_Grade_35_Heated_bend = 80
+CI_Grade_35_Heated_tensile = 750
+Steel_C45_bend = 140
+Steel_C45_tensile = 500
+Steel_15Ni_bend = 320
+Steel_15Ni_tensile = 950
+Steel_40Ni_bend = 400
+Steel_40Ni_tensile = 1100
 '''
-materialList = ['CCI_Grade_20', 'CI_Grade_25', 'CI_Grade_35', 'CI_Grade_35_Heated', 'Steel_C45', 'Steel_15Ni', 'Steel_40Ni']
-popupMenu = OptionMenu(inputWindow, material, *materialList)
 
-'''
-    "M2.5": 2.5,
-    "M3": 3,
-    "M4": 4,
-    "M5": 5,
-    "M6": 6,
-    "M8": 8,
-    "M10": 10,
-    "M12": 12,
-    "M16": 16,
-    "M20": 20,
-    "M24": 24,
-    "M30": 30,
-    "M33": 33,
-    "M36": 36
-'''
-boltList = ['M2.5', 'M3', 'M4', 'M5', 'M6', 'M8', 'M10', 'M12', 'M16', 'M20', 'M24', 'M30', 'M33', 'M36']
-boltMenu = OptionMenu(inputWindow, inputBoltdia, *boltList)
+material = StringVar(inputWindow)  # this is where value selected by user is stored #Material Designation
+bolt = StringVar(inputWindow)
+optList = ['CCI_Grade_20', 'CI_Grade_25', 'CI_Grade_35', 'CI_Grade_35_Heat_Treated', 'Steel_C45', 'Steel_15Ni2Cr1Mo15',
+           'Steel_40Ni2Cr1Mo28']
+material.set(optList[6])
+popupMenu = OptionMenu(inputWindow, material, *optList)
+
+optList2 = ['M2.5', 'M3', 'M4', 'M5', 'M6', 'M8', 'M10', 'M12', 'M16', 'M20', 'M24', 'M30', 'M33', 'M36']
+bolt.set(optList2[7])
+popupMenu2 = OptionMenu(inputWindow, bolt, *optList2)
 
 # Input Boxes for the GUI Design
 # Discharge and Input Pressure
@@ -214,19 +241,22 @@ Label(inputWindow, text="Pressure(in bar)").grid(row=2, column=1)
 pressureInput = tk.Entry(inputWindow)  # speed
 pressureInput.grid(row=2, column=2)
 
+# Input
+# Bolts like M2.5,3,4,5,6,8,10,12,16,20,24,30,33,36
+
+Label(inputWindow, text="Choose Casing Bolt Diameter").grid(row=3, column=1)
+popupMenu2.grid(row=3, column=2)  # controls position of popup grid
+
 # controls position of name of popup grid
-Label(inputWindow, text="Choose Material for Gear").grid(row=7, column=1)
-popupMenu.grid(row=7, column=2)  # controls position of popup grid
+Label(inputWindow, text="Choose Material for Gear").grid(row=8, column=1)
+popupMenu.grid(row=8, column=2)  # controls position of popup grid
 
-Label(inputWindow, text="Choose Diameter of Bolt").grid(row=8, column=1)
-boltMenu.grid(row=8, column=2)  # controls position of popup grid
 # Submit button to end the input
-
 b1 = tk.Button(inputWindow, text='Submit', command=lambda: mainProgram())
-b1.grid(row=12, column=1)
+b1.grid(row=13, column=1)
 
-resetButton = tk.Button(inputWindow, text='Exit', command=lambda: exit())
-resetButton.grid(row=12, column=2)
+imageButton = tk.Button(inputWindow, text='Image', command=lambda: displayImage())
+imageButton.grid(row=13, column=2)
 
 str_out = tk.StringVar(Root1)
 str_out.set("Output")
@@ -237,106 +267,50 @@ str_out.set("Output")
 
 def mainProgram():
     # GUI widgets for Result and assumptions window
-    print("inside Main Program...")
+
     if material.get() == 'CCI_Grade_20':
+        Bending_stress = 50
         Tensile_Stress = 500
-        Bending_Stress = 50
         Modulus_Elasticity = 210000
     elif material.get() == 'CI_Grade_25':
+        Bending_stress = 60
         Tensile_Stress = 600
-        Bending_Stress = 60
         Modulus_Elasticity = 210000
     elif material.get() == 'CI_Grade_35':
+        Bending_stress = 60
         Tensile_Stress = 600
-        Bending_Stress = 60
         Modulus_Elasticity = 210000
-    elif material.get() == 'CI_Grade_35_Heated':
+    elif material.get() == 'CI_Grade_35_Heat_Treated':
+        Bending_stress = 80
         Tensile_Stress = 750
-        Bending_Stress = 80
         Modulus_Elasticity = 210000
     elif material.get() == 'Steel_C45':
+        Bending_stress = 140
         Tensile_Stress = 500
-        Bending_Stress = 140
         Modulus_Elasticity = 210000
-    elif material.get() == 'Steel_15Ni':
+    elif material.get() == 'Steel_15Ni2Cr1Mo15':
+        Bending_stress = 320
         Tensile_Stress = 950
-        Bending_Stress = 320
         Modulus_Elasticity = 210000
-    elif material.get() == 'Steel_40Ni':
+    elif material.get() == 'Steel_40Ni2Cr1Mo28':
+        Bending_stress = 400
         Tensile_Stress = 1100
-        Bending_Stress = 400
         Modulus_Elasticity = 210000
     else:
         print("Error: Invalid material")
         errorFlag('Invalid material')
 
-    if inputBoltdia == 'M2.5':
-        Bolt_diameter = 2.5
-        boltDia2 = 3.39
-    elif inputBoltdia == 'M3':
-        Bolt_diameter = 3
-        boltDia2 = 5.03
-    elif inputBoltdia == 'M4':
-        Bolt_diameter = 4
-        boltDia2 = 8.78
-    elif inputBoltdia == 'M5':
-        Bolt_diameter = 5
-        boltDia2 = 14.2
-    elif inputBoltdia == 'M6':
-        Bolt_diameter = 6
-        boltDia2 = 20.1
-    elif inputBoltdia == 'M8':
-        Bolt_diameter = 8
-        boltDia2 = 36.6
-    elif inputBoltdia == 'M10':
-        Bolt_diameter = 10
-        boltDia2 = 58
-    elif inputBoltdia == 'M12':
-        Bolt_diameter = 12
-        boltDia2 = 84.3
-    elif inputBoltdia == 'M16':
-        Bolt_diameter = 16
-        boltDia2 = 157
-    elif inputBoltdia == 'M20':
-        Bolt_diameter = 16
-        boltDia2 = 245
-    elif inputBoltdia == 'M24':
-        Bolt_diameter = 24
-        boltDia2 = 353
-    elif inputBoltdia == 'M30':
-        Bolt_diameter = 30
-        boltDia2 = 561
-    elif inputBoltdia == 'M33':
-        Bolt_diameter = 33
-        boltDia2 = 694
-    elif inputBoltdia == 'M36':
-        Bolt_diameter = 36
-        boltDia2 = 817
-    else:
-        print("Invalid Bolt type!!!")
-        errorFlag('Invalid Bolt type!!!')
+    # Bolt designation selected will be used to determine the bolt diameter
+    boltDesignation = bolt.get()
 
     Root2 = Tk()
     Root2.title("Assumptions")
-    Root3 = Tk()
-    Root3.title("Result")
 
     assumptionsWindow = Frame(Root2)
-    assumptionsWindow.grid(column=0, row=0, sticky=(W, N, E, S))  # PLEASE CORRECT THIS
+    assumptionsWindow.grid(column=0, row=0, sticky=(N, W, E, S))  # PLEASE CORRECT THIS
     assumptionsWindow.columnconfigure(0, weight=1)
     assumptionsWindow.rowconfigure(0, weight=1)
     assumptionsWindow.pack(pady=60, padx=50)
-
-    resultWindow = Frame(Root3)
-    resultWindow.grid(column=0, row=0, sticky=(W, N, E, S))
-    resultWindow.columnconfigure(0, weight=1)
-    resultWindow.rowconfigure(0, weight=1)
-    resultWindow.pack(pady=60, padx=50)
-
-    # Transmission Unit image Display
-    img = ImageTk.PhotoImage(Image.open(r"Transmission Unit.png"))
-    myLabel = Label(resultWindow, image=img)
-    myLabel.pack()
 
     # Assumptions Start
     Mech_efficiency = 0.93
@@ -357,6 +331,7 @@ def mainProgram():
     Label(assumptionsWindow, text=Service_Factor).grid(row=3, column=2)
     Label(assumptionsWindow, text="").grid(row=3, column=3)  # Enter the units if possible or else leave blank
     Label(assumptionsWindow, text="").grid(row=1, column=4)  # Enter PSG Reference if possible or else leave blank
+
     # Assumptions Ends
 
     # Part 1: Drive Unit
@@ -367,10 +342,10 @@ def mainProgram():
     print("Pressure = ", Pressure)
     print("data type of Discharge :- ", type(Discharge))
     print("data type of Pressure :- ", type(Pressure))
-    Discharge = Discharge / (60 * 1000)  # *Corrected Discharge value
-    Pressure = Pressure * 100000  # *Corrected Input Pressure value
+    Corrected_Discharge = Discharge / (60 * 1000)
+    Corrected_Pressure = Pressure * 100000
 
-    Motor_Power = (Discharge * Pressure) / (Mech_efficiency * Volumetric_Efficiency)
+    Motor_Power = (Corrected_Discharge * Corrected_Pressure) / (Mech_efficiency * Volumetric_Efficiency)
 
     Motor_Power = Motor_Power * Service_Factor  # Corrected Motor Power
 
@@ -386,7 +361,6 @@ def mainProgram():
         print("Error: Standard Motor is not available in PSG")
         errorFlag('Standard Motor is not available in PSG')
         time.sleep(5)
-        Root2.destroy()
     print("corrected standard motor", Corrected_Standard_Motor)
 
     # We completely assume the Speed as 960RPM (Rukhande Sir said too), no mention anywhere
@@ -421,7 +395,7 @@ def mainProgram():
             Amax = 16
             B = 80
             C = 25
-            E = 28
+            Eo = 28
             G = 18
         elif Standard_Max_rating == 0.6:
             Coupling_No = 2
@@ -429,7 +403,7 @@ def mainProgram():
             Amax = 22
             B = 100
             C = 30
-            E = 30
+            Eo = 30
             G = 20
         elif Standard_Max_rating == 0.8:
             Coupling_No = 3
@@ -437,7 +411,7 @@ def mainProgram():
             Amax = 30
             B = 112
             C = 38
-            E = 32
+            Eo = 32
             G = 22
         elif Standard_Max_rating == 2.5:
             Coupling_No = 4
@@ -445,7 +419,7 @@ def mainProgram():
             Amax = 45
             B = 132
             C = 55
-            E = 40
+            Eo = 40
             G = 30
         elif Standard_Max_rating == 4.0:
             Coupling_No = 5
@@ -453,7 +427,7 @@ def mainProgram():
             Amax = 56
             B = 170
             C = 80
-            E = 45
+            Eo = 45
             G = 35
         elif Standard_Max_rating == 6.0:
             Coupling_No = 6
@@ -461,7 +435,7 @@ def mainProgram():
             Amax = 75
             B = 200
             C = 100
-            E = 56
+            Eo = 56
             G = 40
         elif Standard_Max_rating == 16.0:
             Coupling_No = 7
@@ -469,7 +443,7 @@ def mainProgram():
             Amax = 85
             B = 250
             C = 140
-            E = 63
+            Eo = 63
             G = 45
         elif Standard_Max_rating == 25.0:
             Coupling_No = 8
@@ -477,7 +451,7 @@ def mainProgram():
             Amax = 110
             B = 315
             C = 180
-            E = 80
+            Eo = 80
             G = 50
         elif Standard_Max_rating == 52.0:
             Coupling_No = 9
@@ -485,7 +459,7 @@ def mainProgram():
             Amax = 130
             B = 400
             C = 212
-            E = 90
+            Eo = 90
             G = 56
         elif Standard_Max_rating == 74.0:
             Coupling_No = 10
@@ -493,7 +467,7 @@ def mainProgram():
             Amax = 150
             B = 500
             C = 280
-            E = 100
+            Eo = 100
             G = 60
 
     print(Coupling_No)
@@ -510,7 +484,7 @@ def mainProgram():
     Pressure_Angle = 20
 
     Label(assumptionsWindow, text="Gear Profile").grid(row=5, column=1)
-    Label(assumptionsWindow, text="Involute").grid(row=5, column=2)
+    Label(assumptionsWindow, text="Involute Full Depth").grid(row=5, column=2)
     Label(assumptionsWindow, text="").grid(row=5, column=3)
     Label(assumptionsWindow, text="").grid(row=5, column=4)  # Enter PSG Reference if possible or else leave blank
 
@@ -540,10 +514,11 @@ def mainProgram():
     Label(assumptionsWindow, text="").grid(row=10, column=4)  # Enter PSG Reference if possible or else leave blank
     # Step 3.1: Design of Gears
 
-    # Bending_Stress = 400
-    # Tensile_Stress = 1100
-    # Modulus_Elasticity = 210000
-
+    '''
+    Bending_stress = 400
+    Tensile_Stress = 1100
+    Modulus_Elasticity = 210000
+    '''
     # Assumptions:
     No_Teeth = 14
 
@@ -552,13 +527,17 @@ def mainProgram():
     Label(assumptionsWindow, text="").grid(row=11, column=3)
     Label(assumptionsWindow, text="").grid(row=11, column=4)  # Enter PSG Reference if possible or else leave blank
 
+    print("Discharge", Discharge)
+    print("Speed", Speed)
+    print("Volumetric_Efficiency", Volumetric_Efficiency)
+
     Module_in_mm = (((Discharge * 4) / (Speed * 7 * Volumetric_Efficiency * math.pi * 112 * 1000)) ** (1 / 3)) * 1000
-    print(Module_in_mm)
+    print("Module", Module_in_mm)
     # PSG Page 8.2 Start
 
     # ******************Fetch the value of module(in mm) from PSG Database*********************
     Corrected_Standard_Module = PSG_Database('standardModule', Module_in_mm)
-    print(Corrected_Standard_Module)
+    print("Standard Module", Corrected_Standard_Module)
 
     Pitch_Diameter_D = Corrected_Standard_Module * No_Teeth
     Outer_Diameter_Do = 16 * Corrected_Standard_Module
@@ -578,33 +557,35 @@ def mainProgram():
 
     # Test for Bending
 
-    Y1 = math.pi * (0.175 - (0.95 / No_Teeth))
+    Y1 = math.pi * (0.154 - (0.912 / No_Teeth))
     print("Y1", Y1)
 
     Torque = (Corrected_Standard_Motor * 1000 * 60) / (2 * 2 * math.pi * Speed)
     print("Torque", Torque)
 
-    Actual_Bending_Stress = (Torque * 2000) / (New_width * No_Teeth * Y1 * Corrected_Standard_Module ** 2)
+    b_by_m = New_width / Corrected_Standard_Module
+
+    Actual_Bending_Stress = (Torque * 2000) / (b_by_m * No_Teeth * Y1 * (Corrected_Standard_Module) ** (3))
     print("Actual_Bending_Stress", Actual_Bending_Stress)
 
-    if Actual_Bending_Stress > Bending_Stress:
+    if Actual_Bending_Stress > Bending_stress:
         print("Error: Failed at Bending")
         errorFlag('Failure at Bending')
         time.sleep(5)
 
-    elif Actual_Bending_Stress < Bending_Stress:  # Remark: What if the two values are equal? pass or fail
+    elif Actual_Bending_Stress < Bending_stress:  # Remark: What if the two values are equal? pass or fail
         print("###############Sucessfully passed Bending testing")
 
     # Test for Dynamic Load
     # PSG 8.50
 
-    Static_Force = (Bending_Stress * New_width * Y1 * Corrected_Standard_Module) / 1000
+    Static_Force = (Bending_stress * New_width * Y1 * Corrected_Standard_Module) / 1000
     print("Static Force", Static_Force)
 
     Velocity = (math.pi * Pitch_Diameter_D * Speed) / 60000
     print("Velocity", Velocity)
 
-    Barth_Velocity = 1 + (Velocity ** (1 / 2) / Corrected_Standard_Motor)
+    Barth_Velocity = (5.5 + Velocity ** (1 / 2)) / 5.5
     print("Barth velocity", Barth_Velocity)
 
     Tangential_Load = Corrected_Standard_Motor / Velocity
@@ -677,15 +658,16 @@ def mainProgram():
     print("Peq", Peq)
     # PSG 4.2 Start
 
-    C = Peq * (Lmr) ** (1 / k)
-    C_inkgf = C * 100
+    C_1 = Peq * (Lmr) ** (1 / k)
+    C_inkgf = C_1 * 100
     print("C_inkgf", C_inkgf)
 
     New_Outer_Diameter_Do = Root_Diameter_Df + 10
+    print("New_Outer_Diameter_Do", New_Outer_Diameter_Do)
     # PSG 5.124 End
 
     Corrected_Diameter_Do = PSG_Database('bearingDiacheck', New_Outer_Diameter_Do)
-    print("Corrected_Diameter_Do", Corrected_Diameter_Do)
+    # print("Corrected_Diameter_Do", Corrected_Diameter_Do)
 
     if Corrected_Diameter_Do == 52:
         C_PSG = 4100
@@ -696,7 +678,8 @@ def mainProgram():
             Bearing = "RNA 6906"
         elif C_PSG < C_inkgf:
             Corrected_Diameter_Do = 55
-    elif Corrected_Diameter_Do == 55:
+
+    if Corrected_Diameter_Do == 55:
         C_PSG = 4200
         if C_PSG > C_inkgf:
             Dr = 42
@@ -705,7 +688,8 @@ def mainProgram():
             Bearing = "RNA 6907"
         elif C_PSG < C_inkgf:
             Corrected_Diameter_Do = 62
-    elif Corrected_Diameter_Do == 62:
+
+    if Corrected_Diameter_Do == 62:
         C_PSG = 5800
         if C_PSG > C_inkgf:
             Dr = 48
@@ -714,7 +698,8 @@ def mainProgram():
             Bearing = "RNA 6908"
         elif C_PSG < C_inkgf:
             Corrected_Diameter_Do = 68
-    elif Corrected_Diameter_Do == 68:
+
+    if Corrected_Diameter_Do == 68:
         C_PSG = 6000
         if C_PSG > C_inkgf:
             Dr = 52
@@ -723,7 +708,8 @@ def mainProgram():
             Bearing = "RNA 6909"
         elif C_PSG < C_inkgf:
             Corrected_Diameter_Do = 72
-    elif Corrected_Diameter_Do == 72:
+
+    if Corrected_Diameter_Do == 72:
         C_PSG = 6200
         if C_PSG > C_inkgf:
             Dr = 58
@@ -732,7 +718,8 @@ def mainProgram():
             Bearing = "RNA 6910"
         elif C_PSG < C_inkgf:
             Corrected_Diameter_Do = 85
-    elif Corrected_Diameter_Do == 85:
+
+    if Corrected_Diameter_Do == 85:
         C_PSG = 8100
         if C_PSG > C_inkgf:
             Dr = 68
@@ -741,7 +728,8 @@ def mainProgram():
             Bearing = "RNA 6912"
         elif C_PSG < C_inkgf:
             Corrected_Diameter_Do = 100
-    elif Corrected_Diameter_Do == 100:
+
+    if Corrected_Diameter_Do == 100:
         C_PSG = 11300
         if C_PSG > C_inkgf:
             Dr = 80
@@ -750,7 +738,8 @@ def mainProgram():
             Bearing = "RNA 6914"
         elif C_PSG < C_inkgf:
             Corrected_Diameter_Do = 110
-    elif Corrected_Diameter_Do == 110:
+
+    if Corrected_Diameter_Do == 110:
         C_PSG = 11900
         if C_PSG > C_inkgf:
             Dr = 90
@@ -759,7 +748,8 @@ def mainProgram():
             Bearing = "RNA 6916"
         elif C_PSG < C_inkgf:
             Corrected_Diameter_Do = 125
-    elif Corrected_Diameter_Do == 125:
+
+    if Corrected_Diameter_Do == 125:
         C_PSG = 15100
         if C_PSG > C_inkgf:
             Dr = 105
@@ -767,141 +757,173 @@ def mainProgram():
             print("Dr", Dr)
             Bearing = "RNA 6918"
 
-    print(Bearing)
+    print("Corrected_Diameter_Do", Corrected_Diameter_Do)
+    if Corrected_Diameter_Do > New_Outer_Diameter_Do:
+        print("No suitable Needle Bearing Available, so selecting Sliding Contact bearing")
+
+        Bearing = "Sliding Contact bearing"
+        New_New_Outer_Diameter_Do = New_Outer_Diameter_Do - 2
+        Journal_Diameter = New_New_Outer_Diameter_Do - 4
+
+        # Assumption,
+        Pressure_Journal_Bearing = 1.4  # from PSG 7.31
+        Bearing_length = (Radial_Force * 1000) / (Pressure_Journal_Bearing * Journal_Diameter)
+        New_bearing_Length = (math.ceil(Bearing_length / 10)) * 10
+        print("New_bearing_Length", New_bearing_Length)
+
+        Bearing_span = New_bearing_Length + New_width
+        print("Bearing_span", Bearing_span)
+
+        Max_Bending_Moment_temp = (2 * Radial_Force * 1000 * Bearing_span) / 4
+        Max_Bending_Moment = Max_Bending_Moment_temp / 1000
+        print("Max_Bending_Moment", Max_Bending_Moment)
+        Dr1 = Root_Diameter_Df
+
+    if Corrected_Diameter_Do < New_Outer_Diameter_Do:
+        print(Bearing)
+        Dr1 = Dr
+
+        # Step 3.3: Shaft Design
+
+        # Assumptions:
+        Clearance_Shaft = 10
+
+        Span_Length = B + New_width + Clearance_Shaft
+        Max_Bending_Moment = (Resultant_Force * 1000 * Span_Length) / 4000
+        print("Max_Bending_Moment", Max_Bending_Moment)
+
+        Label(assumptionsWindow, text="Clearance Shaft").grid(row=12, column=1)
+        Label(assumptionsWindow, text=Clearance_Shaft).grid(row=12, column=2)
+        Label(assumptionsWindow, text="mm").grid(row=12, column=3)
+        Label(assumptionsWindow, text="").grid(row=12, column=4)  # Enter PSG Reference if possible or else leave blank
 
     # Step 3.3: Shaft Design
 
     # Assumptions:
-    Clearance_Shaft = 10
-    Shear_Stress_PSG = 45
 
-    Label(assumptionsWindow, text="Clearance Shaft").grid(row=12, column=1)
-    Label(assumptionsWindow, text=Clearance_Shaft).grid(row=12, column=2)
-    Label(assumptionsWindow, text="mm").grid(row=12, column=3)
-    Label(assumptionsWindow, text="").grid(row=12, column=4)  # Enter PSG Reference if possible or else leave blank
+    Shear_Stress_PSG = 45
 
     Label(assumptionsWindow, text="Shear Stress(PSG)").grid(row=13, column=1)
     Label(assumptionsWindow, text=Shear_Stress_PSG).grid(row=13, column=2)
     Label(assumptionsWindow, text="N/mm2").grid(row=13, column=3)  # change unit if it's wrong
     Label(assumptionsWindow, text="").grid(row=13, column=4)  # Enter PSG Reference if possible or else leave blank
 
-    Span_Length = B + New_width + Clearance_Shaft
-    Max_Bending_Moment = (Resultant_Force * 1000 * Span_Length) / 4
-
     Equivalent_Torque = math.sqrt((Torque ** 2) + (Max_Bending_Moment ** 2))
     print("Equivalent_Torque", Equivalent_Torque)
 
-    Shear_Stress_Actual = 16 * Equivalent_Torque / (math.pi * Dr ** 3)
+    Shear_Stress_Actual = (16000 * Equivalent_Torque) / (math.pi * (Dr1 ** 3))
     print("Shear_Stress_Actual", Shear_Stress_Actual)
     if Shear_Stress_PSG > Shear_Stress_Actual:
         print("############## Sucessfully passed Shaft-Shear Failure Test")
 
-    elif Shear_Stress_PSG < Shear_Stress_Actual:
+    if Shear_Stress_PSG < Shear_Stress_Actual:
         print("############## Shaft failure due to Shear")
         errorFlag('Shaft failure due to Shear')
         time.sleep(5)
         exit()
 
     # Fetch from PSG Database value of new coupling no.
-    Coupling_No_New = PSG_Database('NewCouplingRange', Dr)
+    if Corrected_Diameter_Do < New_Outer_Diameter_Do:
+        Coupling_No_New = PSG_Database('NewCouplingRange', Dr)
 
-    if Coupling_No_New == 1:
-        Standard_Max_rating = 0.4
-        Coupling_No = 1
-        Amin = 12
-        Amax = 16
-        B = 80
-        C = 25
-        E = 28
-        G = 18
-    elif Coupling_No_New == 2:
-        Standard_Max_rating = 0.6
-        Coupling_No = 2
-        Amin = 16
-        Amax = 22
-        B = 100
-        C = 30
-        E = 30
-        G = 20
-    elif Coupling_No_New == 3:
-        Standard_Max_rating = 0.8
-        Coupling_No = 3
-        Amin = 22
-        Amax = 30
-        B = 112
-        C = 38
-        E = 32
-        G = 22
-    elif Coupling_No_New == 4:
-        Standard_Max_rating = 2.5
-        Coupling_No = 4
-        Amin = 30
-        Amax = 45
-        B = 132
-        C = 55
-        E = 40
-        G = 30
-    elif Coupling_No_New == 5:
-        Standard_Max_rating = 4.0
-        Coupling_No = 5
-        Amin = 45
-        Amax = 56
-        B = 170
-        C = 80
-        E = 45
-        G = 35
-    elif Coupling_No_New == 6:
-        Standard_Max_rating = 6.0
-        Coupling_No = 6
-        Amin = 56
-        Amax = 75
-        B = 200
-        C = 100
-        E = 56
-        G = 40
-    elif Coupling_No_New == 7:
-        Standard_Max_rating = 16.0
-        Coupling_No = 7
-        Amin = 75
-        Amax = 85
-        B = 250
-        C = 140
-        E = 63
-        G = 45
-    elif Coupling_No_New == 8:
-        Standard_Max_rating = 25.0
-        Coupling_No = 8
-        Amin = 85
-        Amax = 110
-        B = 315
-        C = 180
-        E = 80
-        G = 50
-    elif Coupling_No_New == 9:
-        Standard_Max_rating = 52.0
-        Coupling_No = 9
-        Amin = 110
-        Amax = 130
-        B = 400
-        C = 212
-        E = 90
-        G = 56
-    elif Coupling_No_New == 10:
-        Standard_Max_rating = 74.0
-        Coupling_No = 10
-        Amin = 130
-        Amax = 150
-        B = 500
-        C = 280
-        E = 100
-        G = 60
+        if Coupling_No_New == 1:
+            Standard_Max_rating = 0.4
+            Coupling_No = 1
+            Amin = 12
+            Amax = 16
+            B = 80
+            C = 25
+            Eo = 28
+            G = 18
+        elif Coupling_No_New == 2:
+            Standard_Max_rating = 0.6
+            Coupling_No = 2
+            Amin = 16
+            Amax = 22
+            B = 100
+            C = 30
+            Eo = 30
+            G = 20
+        elif Coupling_No_New == 3:
+            Standard_Max_rating = 0.8
+            Coupling_No = 3
+            Amin = 22
+            Amax = 30
+            B = 112
+            C = 38
+            Eo = 32
+            G = 22
+        elif Coupling_No_New == 4:
+            Standard_Max_rating = 2.5
+            Coupling_No = 4
+            Amin = 30
+            Amax = 45
+            B = 132
+            C = 55
+            Eo = 40
+            G = 30
+        elif Coupling_No_New == 5:
+            Standard_Max_rating = 4.0
+            Coupling_No = 5
+            Amin = 45
+            Amax = 56
+            B = 170
+            C = 80
+            Eo = 45
+            G = 35
+        elif Coupling_No_New == 6:
+            Standard_Max_rating = 6.0
+            Coupling_No = 6
+            Amin = 56
+            Amax = 75
+            B = 200
+            C = 100
+            Eo = 56
+            G = 40
+        elif Coupling_No_New == 7:
+            Standard_Max_rating = 16.0
+            Coupling_No = 7
+            Amin = 75
+            Amax = 85
+            B = 250
+            C = 140
+            Eo = 63
+            G = 45
+        elif Coupling_No_New == 8:
+            Standard_Max_rating = 25.0
+            Coupling_No = 8
+            Amin = 85
+            Amax = 110
+            B = 315
+            C = 180
+            Eo = 80
+            G = 50
+        elif Coupling_No_New == 9:
+            Standard_Max_rating = 52.0
+            Coupling_No = 9
+            Amin = 110
+            Amax = 130
+            B = 400
+            C = 212
+            Eo = 90
+            G = 56
+        elif Coupling_No_New == 10:
+            Standard_Max_rating = 74.0
+            Coupling_No = 10
+            Amin = 130
+            Amax = 150
+            B = 500
+            C = 280
+            Eo = 100
+            G = 60
 
-    print("Coupling_No_New", Coupling_No_New)
-    print("Standard_Max_rating", Standard_Max_rating)
+        print("Coupling_No_New", Coupling_No_New)
+        Coupling_No = Coupling_No_New
+        print("Standard_Max_rating", Standard_Max_rating)
     # Step 3.4: Casing
 
     # Assumptions:
-    Tensile_Stress_Casing = 200
+    Tensile_Stress_Casing = 180
     FoS_Casing = 6
 
     Label(assumptionsWindow, text="Tensile Stress Casing").grid(row=14, column=1)
@@ -916,11 +938,12 @@ def mainProgram():
 
     Safe_Tensile_Stress_Casing = Tensile_Stress_Casing / FoS_Casing
 
-    # Bolt Dia is selected by user and is set in beginning of main program function
+    # Fetch Bolt Diameter from PSG Database
+    Bolt_diameter = PSG_Database('Bolt Dia Dict', boltDesignation)
 
     # By Thick Cylinder Theory:
-    Thickness_Casing = (Corrected_Diameter_Do / 2) * (
-            ((Safe_Tensile_Stress_Casing + Pmax) / (Safe_Tensile_Stress_Casing - Pmax)) ** (1 / 2) - 1)
+    Thickness_Casing = (Outer_Diameter_Do / 2) * (
+                ((Safe_Tensile_Stress_Casing + Pmax) / (Safe_Tensile_Stress_Casing - Pmax)) ** (1 / 2) - 1)
     print("Thickness_Casing", Thickness_Casing)
 
     Final_Thickness_Casing = math.ceil(Thickness_Casing / 2.) * 2
@@ -929,6 +952,9 @@ def mainProgram():
     C_casing = Corrected_Diameter_Do + Pitch_Diameter_D
     PCD_casing = C_casing + 3 * Bolt_diameter
     Outer_Diameter_Casing = PCD_casing + 3 * Bolt_diameter
+    print("C_casing", C_casing)
+    print("PCD_casing", PCD_casing)
+    print("Outer_Diameter_Casing", Outer_Diameter_Casing)
 
     # Step 3.5: Fasteners/ Bolts
 
@@ -949,7 +975,7 @@ def mainProgram():
 
     Design_Pressure = 1.2 * Pressure_in_N_mm2
     Openning_Pressure = 1.5 * Pressure_in_N_mm2
-    Projected_Area = ((math.pi / 4) * Outer_Diameter_Do ** 2) + Outer_Diameter_Do * 56
+    Projected_Area = ((math.pi / 4) * Outer_Diameter_Do ** 2) + Outer_Diameter_Do * Pitch_Diameter_D
     print("Project Area", Projected_Area)
 
     External_Force_Fe = Design_Pressure * Projected_Area
@@ -962,18 +988,16 @@ def mainProgram():
     Net_Force_Bolt_Fb = Initial_Tightening_Force_Fi + External_Force_Fe * Stiffness_External
     print("Net_Force_Bolt_Fb", Net_Force_Bolt_Fb)
 
-    # Input
-    # Bolts like M2.5,3,4,5,6,8,10,12,16,20,24,30,33,36
-
     PCD_Holes = 1
 
-    Actual_Tensile_Bolt = Net_Force_Bolt_Fb / (PCD_Holes * boltDia2)
+    Actual_Tensile_Bolt = Net_Force_Bolt_Fb / (PCD_Holes * PSG_Database('Bolt Dict', boltDesignation))
+    # Fetch Bolt dia from 'Bolt Dict' from PSG Database
     print("Actual_Tensile_Bolt", Actual_Tensile_Bolt)
 
     while Actual_Tensile_Bolt > Tensile_Stress_Fastener:
         PCD_Holes = PCD_Holes + 1
         # print(PCD_Holes)
-        Actual_Tensile_Bolt = Net_Force_Bolt_Fb / (PCD_Holes * boltDia2)
+        Actual_Tensile_Bolt = Net_Force_Bolt_Fb / (PCD_Holes * PSG_Database('Bolt Dict', boltDesignation))
     #
     if Actual_Tensile_Bolt < Tensile_Stress_Fastener:
         print("No. of Bolt Holes in casing would be ", PCD_Holes)
@@ -995,14 +1019,15 @@ def mainProgram():
     Label(assumptionsWindow, text=" ").grid(row=18, column=3)  # Enter units for velocity of Suction
     Label(assumptionsWindow, text="").grid(row=18, column=4)  # Enter PSG Reference if possible or else leave blank
 
-    Diameter_of_Suction = (((4 * Discharge) / (math.pi * Velocity_Suction)) ** (1 / 2)) * 1000
+    Diameter_of_Suction = (((4 * Corrected_Discharge) / (math.pi * Velocity_Suction)) ** (1 / 2)) * 1000
     print("Diameter_of_Suction", Diameter_of_Suction)
 
-    Diameter_of_Suction = PSG_Database('standardPipedia', Diameter_of_Suction)
+    Corrected_Pipe_Dia_inch = PSG_Database('standardPipedia', Diameter_of_Suction)
 
-    print("Corrected Diameter of Suction(in mm) = ", 25.4 * Diameter_of_Suction)
+    Corrected_Pipe_Dia_mm = 25.4 * Corrected_Pipe_Dia_inch
+    print("(Standard) Corrected_Pipe_Dia_mm", Corrected_Pipe_Dia_mm)
 
-    Actual_Suction_Velocity = (4 * Discharge * 1000000) / (math.pi * (25.4 * Diameter_of_Suction) ** 2)
+    Actual_Suction_Velocity = (4 * Corrected_Discharge * 1000000) / (math.pi * Corrected_Pipe_Dia_mm ** 2)
     print("Actual_Suction_Velocity", Actual_Suction_Velocity)
 
     # Step4.2: Delivery Side
@@ -1015,85 +1040,255 @@ def mainProgram():
     Label(assumptionsWindow, text=" ").grid(row=19, column=3)  # Enter units for velocity of Delivery
     Label(assumptionsWindow, text="").grid(row=19, column=4)  # Enter PSG Reference if possible or else leave blank
 
-    Label(assumptionsWindow, text="Modulus of Elasticity").grid(row=20, column=1)
-    Label(assumptionsWindow, text=Modulus_Elasticity).grid(row=20, column=2)
-    Label(assumptionsWindow, text="N/mm2").grid(row=20, column=3)  # Enter units for velocity of Delivery
-    Label(assumptionsWindow, text="").grid(row=20, column=4)  # Enter PSG Reference if possible or else leave blank
+    Diameter_of_Delivery = (((4 * Corrected_Discharge) / (math.pi * Velocity_Delivery)) ** (1 / 2)) * 1000
+    print("Diameter_of_Delivery", Diameter_of_Delivery)
 
-    endAssumptionwindow = Button(master=resultWindow, text="End", height=2, width=10,
-                          command=lambda: assumptionsWindow.destroy())
-    endAssumptionwindow.pack()
+    Corrected_Pipe_Dia_inch2 = PSG_Database('standardPipedia', Diameter_of_Delivery)
 
-    Diameter_of_Delivery = (((4 * Discharge) / (math.pi * Velocity_Delivery)) ** (1 / 2)) * 1000
-    print("Diameter_of_Delivery = ", Diameter_of_Delivery)
+    Corrected_Pipe_Dia_mm2 = 25.4 * Corrected_Pipe_Dia_inch2
+    print("(Standard) Corrected_Pipe_Dia_mm", Corrected_Pipe_Dia_mm2)
 
-    Diameter_of_Delivery = PSG_Database('standardPipedia', Diameter_of_Delivery)
-
-    print("Corrected Diameter of Delivery(in mm) = ", Diameter_of_Delivery)
-
-    Actual_Delivery_Velocity = (4 * Discharge * 1000000) / (math.pi * (25.4 * Diameter_of_Delivery) ** 2)
-    print("Actual_Delivery_Velocity = ", Actual_Delivery_Velocity)
+    Actual_Delivery_Velocity = (4 * Corrected_Discharge * 1000000) / (math.pi * Corrected_Pipe_Dia_mm2 ** 2)
+    print("Actual_Delivery_Velocity", Actual_Delivery_Velocity)
 
     # Add a grid for Output
+    Root3 = Tk()
+    Root3.title("Result")
 
-    Label(resultWindow, text="Coupling No.").grid(row=1, column=1)
-    Label(resultWindow, text=Coupling_No).grid(row=1, column=2)
-    Label(resultWindow, text="").grid(row=1, column=3)  # Enter unit next to coupling No.
+    resultWindow = Frame(Root3)
+    resultWindow.grid(column=0, row=0, sticky=(N, W, E, S))
+    resultWindow.columnconfigure(0, weight=1)
+    resultWindow.rowconfigure(0, weight=1)
+    resultWindow.pack(pady=60, padx=50)
 
-    Label(resultWindow, text="Amin").grid(row=2, column=1)
-    Label(resultWindow, text=Amin).grid(row=2, column=2)
-    Label(resultWindow, text="mm").grid(row=2, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Drive Unit Results").grid(row=1, column=2)
 
-    Label(resultWindow, text="Amax").grid(row=3, column=1)
-    Label(resultWindow, text=Amax).grid(row=3, column=2)
-    Label(resultWindow, text="mm").grid(row=3, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Standard Motor").grid(row=2, column=1)
+    Label(resultWindow, text=Corrected_Standard_Motor).grid(row=2, column=2)
+    Label(resultWindow, text="kW").grid(row=2, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="B").grid(row=4, column=1)
-    Label(resultWindow, text=B).grid(row=4, column=2)
-    Label(resultWindow, text="mm").grid(row=4, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Motor Speed").grid(row=3, column=1)
+    Label(resultWindow, text=Speed).grid(row=3, column=2)
+    Label(resultWindow, text="RPM").grid(row=3, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="C").grid(row=5, column=1)
-    Label(resultWindow, text=C).grid(row=5, column=2)
-    Label(resultWindow, text="mm").grid(row=5, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="         ").grid(row=4, column=2)
 
-    Label(resultWindow, text="E").grid(row=6, column=1)
-    Label(resultWindow, text=E).grid(row=6, column=2)
+    Label(resultWindow, text="Transmission Unit Results").grid(row=5, column=2)
+
+    Label(resultWindow, text="Amin").grid(row=6, column=1)
+    Label(resultWindow, text='%.2f' % Amin).grid(row=6, column=2)
     Label(resultWindow, text="mm").grid(row=6, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="G").grid(row=7, column=1)
-    Label(resultWindow, text=G).grid(row=7, column=2)
+    Label(resultWindow, text="Amax").grid(row=7, column=1)
+    Label(resultWindow, text='%.2f' % Amax).grid(row=7, column=2)
     Label(resultWindow, text="mm").grid(row=7, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Diameter of Suction").grid(row=7, column=1)
-    Label(resultWindow, text=G).grid(row=7, column=2)
-    Label(resultWindow, text="mm").grid(row=7, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="B").grid(row=8, column=1)
+    Label(resultWindow, text='%.2f' % B).grid(row=8, column=2)
+    Label(resultWindow, text="mm").grid(row=8, column=3)  # Correct if unit is not 'mm'
 
-    # button that displays the plot
-    plot_button = Button(master=resultWindow, text="Plot", height=2, width=10, command=lambda: plot())
-    plot_button.pack()  # place the button in Results window
+    Label(resultWindow, text="C").grid(row=9, column=1)
+    Label(resultWindow, text='%.2f' % C).grid(row=9, column=2)
+    Label(resultWindow, text="mm").grid(row=9, column=3)  # Correct if unit is not 'mm'
 
-    endReswindow = Button(master=resultWindow, text="End", height=2, width=10, command=lambda: resultWindow.destroy())
-    endReswindow.pack()
+    Label(resultWindow, text="E").grid(row=10, column=1)
+    Label(resultWindow, text='%.2f' % Eo).grid(row=10, column=2)
+    Label(resultWindow, text="mm").grid(row=10, column=3)  # Correct if unit is not 'mm'
 
-    # Function to plot the graph
+    Label(resultWindow, text="G").grid(row=11, column=1)
+    Label(resultWindow, text='%.2f' % G).grid(row=11, column=2)
+    Label(resultWindow, text="mm").grid(row=11, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="         ").grid(row=12, column=2)
+    Label(resultWindow, text="Pump Unit Results").grid(row=13, column=2)
+
+    Label(resultWindow, text="Gear Module").grid(row=14, column=1)
+    Label(resultWindow, text='%.2f' % Corrected_Standard_Module).grid(row=14, column=2)
+    Label(resultWindow, text="mm").grid(row=14, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Outer Diameter Do").grid(row=15, column=1)
+    Label(resultWindow, text='%.2f' % New_Outer_Diameter_Do).grid(row=15, column=2)
+    Label(resultWindow, text="mm").grid(row=15, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Root Diameter Dr").grid(row=16, column=1)
+    Label(resultWindow, text='%.2f' % Root_Diameter_Df).grid(row=16, column=2)
+    Label(resultWindow, text="mm").grid(row=16, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Pitch Diameter D").grid(row=17, column=1)
+    Label(resultWindow, text='%.2f' % Pitch_Diameter_D).grid(row=17, column=2)
+    Label(resultWindow, text="mm").grid(row=17, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Width").grid(row=18, column=1)
+    Label(resultWindow, text='%.2f' % New_width).grid(row=18, column=2)
+    Label(resultWindow, text="mm").grid(row=18, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Clearance").grid(row=19, column=1)
+    Label(resultWindow, text='%.2f' % Clearance).grid(row=19, column=2)
+    Label(resultWindow, text="mm").grid(row=19, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Tangential Load").grid(row=20, column=1)
+    Label(resultWindow, text='%.2f' % Tangential_Load).grid(row=20, column=2)
+    Label(resultWindow, text="kN").grid(row=20, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Radial Load").grid(row=21, column=1)
+    Label(resultWindow, text='%.2f' % Radial_Load).grid(row=21, column=2)
+    Label(resultWindow, text="kN").grid(row=21, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Hydraulic Force").grid(row=22, column=1)
+    Label(resultWindow, text='%.2f' % Hydraulic_Force).grid(row=22, column=2)
+    Label(resultWindow, text="kN").grid(row=22, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Resultant Force").grid(row=23, column=1)
+    Label(resultWindow, text='%.2f' % Resultant_Force).grid(row=23, column=2)
+    Label(resultWindow, text="kN").grid(row=23, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="         ").grid(row=23, column=2)
+
+    Label(resultWindow, text="Radial Force").grid(row=24, column=1)
+    Label(resultWindow, text='%.2f' % Radial_Force).grid(row=24, column=2)
+    Label(resultWindow, text="kN").grid(row=24, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="LMR").grid(row=25, column=1)
+    Label(resultWindow, text=Lmr).grid(row=25, column=2)
+    Label(resultWindow, text="millions").grid(row=25, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Equivalent Load Peq").grid(row=26, column=1)
+    Label(resultWindow, text='%.2f' % Peq).grid(row=26, column=2)
+    Label(resultWindow, text="kN").grid(row=26, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Dynamic Load Capacity").grid(row=27, column=1)
+    Label(resultWindow, text='%.2f' % C_inkgf).grid(row=27, column=2)
+    Label(resultWindow, text="kgf").grid(row=27, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Bearing Type/Name").grid(row=28, column=1)
+    Label(resultWindow, text=Bearing).grid(row=28, column=2)
+    Label(resultWindow, text=" ").grid(row=28, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="         ").grid(row=29, column=2)
+
+    Label(resultWindow, text="Coupling Number").grid(row=30, column=1)
+    Label(resultWindow, text=Coupling_No).grid(row=30, column=2)
+    Label(resultWindow, text=" ").grid(row=30, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="KW per 100RPM").grid(row=31, column=1)
+    Label(resultWindow, text='%.2f' % KW_per_100_RPM).grid(row=31, column=2)
+
+    Label(resultWindow, text=" ").grid(row=31, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="         ").grid(row=32, column=2)
+
+    Label(resultWindow, text="Casing Thickness").grid(row=33, column=1)
+    Label(resultWindow, text='%.2f' % Final_Thickness_Casing).grid(row=33, column=2)
+    Label(resultWindow, text="mm").grid(row=33, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Bolts PCD (Casing)").grid(row=34, column=1)
+    Label(resultWindow, text='%.2f' % PCD_casing).grid(row=34, column=2)
+    Label(resultWindow, text="mm").grid(row=34, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Outer Diameter of casing").grid(row=35, column=1)
+    Label(resultWindow, text='%.2f' % Outer_Diameter_Casing).grid(row=35, column=2)
+    Label(resultWindow, text="mm").grid(row=35, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="         ").grid(row=36, column=2)
+
+    Label(resultWindow, text="Bolts Projected Area").grid(row=37, column=1)
+    Label(resultWindow, text='%.2f' % Projected_Area).grid(row=37, column=2)
+    Label(resultWindow, text="mm2").grid(row=37, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="External Force").grid(row=38, column=1)
+    Label(resultWindow, text='%.2f' % External_Force_Fe).grid(row=38, column=2)
+    Label(resultWindow, text="N").grid(row=38, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Openning Force").grid(row=39, column=1)
+    Label(resultWindow, text='%.2f' % Opening_Force_Fo).grid(row=39, column=2)
+    Label(resultWindow, text="N").grid(row=39, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Initial Tightening Load").grid(row=40, column=1)
+    Label(resultWindow, text='%.2f' % Initial_Tightening_Force_Fi).grid(row=40, column=2)
+    Label(resultWindow, text="N").grid(row=40, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Net Force on Bolt").grid(row=41, column=1)
+    Label(resultWindow, text='%.2f' % Net_Force_Bolt_Fb).grid(row=41, column=2)
+    Label(resultWindow, text="N").grid(row=41, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Number of Bolts").grid(row=42, column=1)
+    Label(resultWindow, text=PCD_Holes).grid(row=42, column=2)
+    Label(resultWindow, text="").grid(row=42, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="         ").grid(row=43, column=2)
+
+    Label(resultWindow, text="Piping Unit").grid(row=44, column=2)
+
+    Label(resultWindow, text="Suction Pipe Diameter").grid(row=45, column=1)
+    Label(resultWindow, text='%.2f' % Corrected_Pipe_Dia_mm).grid(row=45, column=2)
+    Label(resultWindow, text="mm").grid(row=45, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Suction Velocity").grid(row=46, column=1)
+    Label(resultWindow, text='%.2f' % Actual_Suction_Velocity).grid(row=46, column=2)
+    Label(resultWindow, text="m/s").grid(row=46, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Delivery Pipe Diameter").grid(row=47, column=1)
+    Label(resultWindow, text='%.2f' % Corrected_Pipe_Dia_mm2).grid(row=47, column=2)
+    Label(resultWindow, text="mm").grid(row=47, column=3)  # Correct if unit is not 'mm'
+
+    Label(resultWindow, text="Delivery Velocity").grid(row=48, column=1)
+    Label(resultWindow, text='%.2f' % Actual_Delivery_Velocity).grid(row=48, column=2)
+    Label(resultWindow, text="m/s").grid(row=48, column=3)  # Correct if unit is not 'mm'
+
+    Root5 = Tk()
+    Root5.title("Actual V/S PSG Stresses")
+
+    stress_compare = Frame(Root5)
+    stress_compare.grid(column=0, row=0, sticky=(N, W, E, S))
+    stress_compare.columnconfigure(0, weight=1)
+    stress_compare.rowconfigure(0, weight=1)
+    stress_compare.pack(pady=60, padx=50)  # controls fixed gap in between main content and edges, pady for y padx for x
+
+    Label(stress_compare, text="Bending Stress needed to Bend Gear is    ").grid(row=1, column=1)
+    Label(stress_compare, text='%.2f' % Actual_Bending_Stress).grid(row=1, column=2)
+    Label(stress_compare, text="   which is less than    ").grid(row=1, column=3)
+    Label(stress_compare, text='%.2f' % Bending_stress).grid(row=1, column=4)
+
+    Label(stress_compare, text="Dynamic load in gear is      ").grid(row=2, column=1)
+    Label(stress_compare, text='%.2f' % Dynamic_Force).grid(row=2, column=2)
+    Label(stress_compare, text="   which is less than    ").grid(row=2, column=3)
+    Label(stress_compare, text='%.2f' % Static_Force).grid(row=2, column=4)
+
+    Label(stress_compare, text="Induced Contact Stress for Pitting failure is     ").grid(row=3, column=1)
+    Label(stress_compare, text='%.2f' % Actual_Tensile_Stress).grid(row=3, column=2)
+    Label(stress_compare, text="   which is less than    ").grid(row=3, column=3)
+    Label(stress_compare, text='%.2f' % Tensile_Stress).grid(row=3, column=4)
+
+    Label(stress_compare, text="Shear stress needed to shear shaft is     ").grid(row=4, column=1)
+    Label(stress_compare, text='%.2f' % Shear_Stress_Actual).grid(row=4, column=2)
+    Label(stress_compare, text="   which is less than    ").grid(row=4, column=3)
+    Label(stress_compare, text='%.2f' % Shear_Stress_PSG).grid(row=4, column=4)
+
+    Label(stress_compare, text=" ").grid(row=5, column=2)
+
+    Label(stress_compare, text="Sucessfully completed all Tests").grid(row=6, column=2)
+
+    plotButton = Button(stress_compare, text="Plot", height=2, width=10, command=lambda: plot())
+    plotButton.grid(row=7, column=2)
+
     def plot():
         # Setting up dataframe for graph plotting
-        graphData = {'Allowable Stress': [],
-                     'Actual Stress': []
+        graphData = {'Allowable Stress': [1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010],
+                     'Actual Stress': [9.8, 12, 8, 7.2, 6.9, 7, 6.5, 6.2, 5.5, 6.3]
                      }
         graphDataframe = DataFrame(graphData, columns=['Allowable Stress', 'Actual Stress'])
 
         # Ploting the graph
-        figure = plt.Figure(figsize=(5, 4), dpi=100)
+        figure = plt.Figure(figsize=(5, 10), dpi=100)
         ax = figure.add_subplot(111)
-        line = FigureCanvasTkAgg(figure, resultWindow)
+        line = FigureCanvasTkAgg(figure, Root5)
         line.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-        graphDataframe = graphDataframe[['Year', 'Unemployment_Rate']].groupby('Year').sum()
+        graphDataframe = graphDataframe[['Allowable Stress', 'Actual Stress']].groupby('Allowable Stress').sum()
         graphDataframe.plot(kind='line', legend=True, ax=ax, color='r', marker='o', fontsize=10)
         ax.set_title('Allowable Stress Vs. Actual Stress')
 
     Root2.mainloop()
     Root3.mainloop()
+    Root5.mainloop()
 
 
 Root1.mainloop()
