@@ -19,17 +19,19 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 def errorFlag(errorMessage):
     Root4 = Tk()
     Root4.title("Error Window")
+    Root4.configure(bg='yellow')
 
-    errorWindow = Frame(Root4)
+    errorWindow = Frame(Root4, bg='yellow')
     errorWindow.grid(column=0, row=0, sticky=(N, W, E, S))
     errorWindow.columnconfigure(0, weight=1)
     errorWindow.rowconfigure(0, weight=1)
     errorWindow.pack(pady=60, padx=50)  # controls fixed gap in between main content and edges, pady for y padx for x
-    Label(errorWindow, text="Error    :").grid(row=1, column=1)
-    Label(errorWindow, text=errorMessage).grid(row=1, column=2)
+    Label(errorWindow, text="Error    :", bg='yellow', fg='red').grid(row=1, column=1)
+    Label(errorWindow, text=errorMessage, bg='yellow', fg='red').grid(row=1, column=2)
 
-    OK_btn = Button(errorWindow, text='OK', width=15, bd=0, bg='white', pady=5, command=lambda: Root4.destroy())
-    OK_btn.grid(row=2, column=1, padx=8, pady=5)
+    OK_btn = Button(errorWindow, text='Exit', width=15, bd=0, bg='cyan', fg='black', pady=5,
+                    command=lambda: Root4.destroy())
+    OK_btn.grid(row=2, column=2, pady=10)
     time.sleep(2)
     Root4.mainloop()
 
@@ -188,7 +190,9 @@ def range_index1(table, val):
 # Initializing the GUI Window
 Root1 = Tk()
 Root1.title("Design of Gear Pump")
-inputWindow = Frame(Root1)
+Root1.configure(bg='black')
+
+inputWindow = Frame(Root1, bg='black')
 inputWindow.grid(column=0, row=0, sticky=(N, W, E, S))
 inputWindow.columnconfigure(0, weight=1)
 inputWindow.rowconfigure(0, weight=1)
@@ -233,30 +237,30 @@ popupMenu2 = OptionMenu(inputWindow, bolt, *optList2)
 
 # Input Boxes for the GUI Design
 # Discharge and Input Pressure
-Label(inputWindow, text="Discharge(LPM)").grid(row=1, column=1)
+Label(inputWindow, text="Discharge(LPM)", bg='black', fg='yellow').grid(row=1, column=1)
 dischargeInput = tk.Entry(inputWindow)  # power
-dischargeInput.grid(row=1, column=2)
+dischargeInput.grid(row=1, column=2, pady=3)
 
-Label(inputWindow, text="Pressure(in bar)").grid(row=2, column=1)
+Label(inputWindow, text="Pressure(in bar)", bg='black', fg='yellow').grid(row=2, column=1)
 pressureInput = tk.Entry(inputWindow)  # speed
-pressureInput.grid(row=2, column=2)
+pressureInput.grid(row=2, column=2, pady=3)
 
 # Input
 # Bolts like M2.5,3,4,5,6,8,10,12,16,20,24,30,33,36
 
-Label(inputWindow, text="Choose Casing Bolt Diameter").grid(row=3, column=1)
-popupMenu2.grid(row=3, column=2)  # controls position of popup grid
+Label(inputWindow, text="Choose Casing Bolt Diameter", bg='black', fg='yellow').grid(row=3, column=1)
+popupMenu2.grid(row=3, column=2, pady=3)  # controls position of popup grid
 
 # controls position of name of popup grid
-Label(inputWindow, text="Choose Material for Gear").grid(row=8, column=1)
-popupMenu.grid(row=8, column=2)  # controls position of popup grid
+Label(inputWindow, text="Choose Material for Gear", bg='black', fg='yellow').grid(row=8, column=1)
+popupMenu.grid(row=8, column=2, pady=3)  # controls position of popup grid
 
 # Submit button to end the input
-b1 = tk.Button(inputWindow, text='Submit', command=lambda: mainProgram())
-b1.grid(row=13, column=1)
+b1 = tk.Button(inputWindow, text='Submit', bg='cyan', fg='black', command=lambda: mainProgram())
+b1.grid(row=13, column=1, pady=10)
 
-imageButton = tk.Button(inputWindow, text='Image', command=lambda: displayImage())
-imageButton.grid(row=13, column=2)
+imageButton = tk.Button(inputWindow, text='Image', bg='cyan', fg='black', command=lambda: displayImage())
+imageButton.grid(row=13, column=2, pady=10)
 
 str_out = tk.StringVar(Root1)
 str_out.set("Output")
@@ -305,8 +309,9 @@ def mainProgram():
 
     Root2 = Tk()
     Root2.title("Assumptions")
+    Root2.configure(bg='black')
 
-    assumptionsWindow = Frame(Root2)
+    assumptionsWindow = Frame(Root2, bg='black')
     assumptionsWindow.grid(column=0, row=0, sticky=(N, W, E, S))  # PLEASE CORRECT THIS
     assumptionsWindow.columnconfigure(0, weight=1)
     assumptionsWindow.rowconfigure(0, weight=1)
@@ -317,20 +322,26 @@ def mainProgram():
     Volumetric_Efficiency = 0.97
     Service_Factor = 1.5  # PSG 7.109 for Rotary Pump
 
-    Label(assumptionsWindow, text="Mechanical Efficiency").grid(row=1, column=1)
-    Label(assumptionsWindow, text=Mech_efficiency).grid(row=1, column=2)
-    Label(assumptionsWindow, text="").grid(row=1, column=3)  # Enter the units if possible or else leave blank
-    Label(assumptionsWindow, text="").grid(row=1, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Mechanical Efficiency", bg='black', fg='yellow').grid(row=1, column=1)
+    Label(assumptionsWindow, text=Mech_efficiency, bg='black', fg='yellow').grid(row=1, column=2)
+    # Enter the units if possible or else leave blank,
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=1, column=3)
+    # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=1, column=4)
 
-    Label(assumptionsWindow, text="Volumetric Efficiency").grid(row=2, column=1)
-    Label(assumptionsWindow, text=Volumetric_Efficiency).grid(row=2, column=2)
-    Label(assumptionsWindow, text="").grid(row=2, column=3)  # Enter the units if possible or else leave blank
-    Label(assumptionsWindow, text="").grid(row=2, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Volumetric Efficiency", bg='black', fg='yellow').grid(row=2, column=1)
+    Label(assumptionsWindow, text=Volumetric_Efficiency, bg='black', fg='yellow').grid(row=2, column=2)
+    # Enter the units if possible or else leave blank
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=2, column=3)
+    # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=2, column=4)
 
-    Label(assumptionsWindow, text="Service Factor").grid(row=3, column=1)
-    Label(assumptionsWindow, text=Service_Factor).grid(row=3, column=2)
-    Label(assumptionsWindow, text="").grid(row=3, column=3)  # Enter the units if possible or else leave blank
-    Label(assumptionsWindow, text="").grid(row=1, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Service Factor", bg='black', fg='yellow').grid(row=3, column=1)
+    Label(assumptionsWindow, text=Service_Factor, bg='black', fg='yellow').grid(row=3, column=2)
+    # Enter the units if possible or else leave blank
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=3, column=3)
+    # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=1, column=4)
 
     # Assumptions Ends
 
@@ -360,16 +371,19 @@ def mainProgram():
     if Corrected_Standard_Motor == -1:
         print("Error: Standard Motor is not available in PSG")
         errorFlag('Standard Motor is not available in PSG')
+        assumpWinclose = Button(assumptionsWindow, text="Exit", bg='black', fg='yellow', height=2, width=10,
+                                command=lambda: Root2.destroy())
+        assumpWinclose.grid(row=4, column=2, pady=10)
         time.sleep(5)
     print("corrected standard motor", Corrected_Standard_Motor)
 
     # We completely assume the Speed as 960RPM (Rukhande Sir said too), no mention anywhere
     Speed = 960
 
-    Label(assumptionsWindow, text="Speed").grid(row=4, column=1)
-    Label(assumptionsWindow, text=Speed).grid(row=4, column=2)
-    Label(assumptionsWindow, text="rpm").grid(row=4, column=3)
-    Label(assumptionsWindow, text="").grid(row=4, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Speed", bg='black', fg='yellow').grid(row=4, column=1)
+    Label(assumptionsWindow, text=Speed, bg='black', fg='yellow').grid(row=4, column=2)
+    Label(assumptionsWindow, text="rpm", bg='black', fg='yellow').grid(row=4, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=4, column=4)  # Enter PSG Reference if possible or else leave blank
     # Part 1 End: Drive Unit
 
     #################################################################################################################
@@ -387,6 +401,9 @@ def mainProgram():
     if Standard_Max_rating == -1:
         print("Error: Value not found in database")
         errorFlag('Value not found in database')
+        assumpWinclose = Button(assumptionsWindow, text="Exit", bg='cyan', fg='black', height=2, width=10,
+                                command=lambda: Root2.destroy())
+        assumpWinclose.grid(row=5, column=2, pady=10)
         time.sleep(5)
     else:
         if Standard_Max_rating == 0.4:
@@ -483,35 +500,36 @@ def mainProgram():
     Gear_Ratio = 1
     Pressure_Angle = 20
 
-    Label(assumptionsWindow, text="Gear Profile").grid(row=5, column=1)
-    Label(assumptionsWindow, text="Involute Full Depth").grid(row=5, column=2)
-    Label(assumptionsWindow, text="").grid(row=5, column=3)
-    Label(assumptionsWindow, text="").grid(row=5, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Gear Profile", bg='black', fg='yellow').grid(row=5, column=1)
+    Label(assumptionsWindow, text="Involute Full Depth", bg='black', fg='yellow').grid(row=5, column=2)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=5, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=5, column=4)
 
-    Label(assumptionsWindow, text="Quality of Gear").grid(row=6, column=1)
-    Label(assumptionsWindow, text="Precision Cut").grid(row=6, column=2)
-    Label(assumptionsWindow, text="").grid(row=6, column=3)
-    Label(assumptionsWindow, text="").grid(row=6, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Quality of Gear", bg='black', fg='yellow').grid(row=6, column=1)
+    Label(assumptionsWindow, text="Precision Cut", bg='black', fg='yellow').grid(row=6, column=2)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=6, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=6, column=4)
 
-    Label(assumptionsWindow, text="Type of Meshing").grid(row=7, column=1)
-    Label(assumptionsWindow, text="Sn gearing").grid(row=7, column=2)
-    Label(assumptionsWindow, text="").grid(row=7, column=3)
-    Label(assumptionsWindow, text="").grid(row=7, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Type of Meshing", bg='black', fg='yellow').grid(row=7, column=1)
+    Label(assumptionsWindow, text="Sn gearing", bg='black', fg='yellow').grid(row=7, column=2)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=7, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=7, column=4)
 
-    Label(assumptionsWindow, text="Gear Type").grid(row=8, column=1)
-    Label(assumptionsWindow, text="Spur Gear").grid(row=8, column=2)
-    Label(assumptionsWindow, text="").grid(row=8, column=3)
-    Label(assumptionsWindow, text="").grid(row=8, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Gear Type", bg='black', fg='yellow').grid(row=8, column=1)
+    Label(assumptionsWindow, text="Spur Gear", bg='black', fg='yellow').grid(row=8, column=2)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=8, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=8, column=4)
 
-    Label(assumptionsWindow, text="Gear Ratio").grid(row=9, column=1)
-    Label(assumptionsWindow, text=Gear_Ratio).grid(row=9, column=2)
-    Label(assumptionsWindow, text="").grid(row=9, column=3)
-    Label(assumptionsWindow, text="").grid(row=9, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Gear Ratio", bg='black', fg='yellow').grid(row=9, column=1)
+    Label(assumptionsWindow, text=Gear_Ratio, bg='black', fg='yellow').grid(row=9, column=2)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=9, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=9, column=4)
 
-    Label(assumptionsWindow, text="Pressure Angle").grid(row=10, column=1)
-    Label(assumptionsWindow, text=Pressure_Angle).grid(row=10, column=2)
-    Label(assumptionsWindow, text="").grid(row=10, column=3)
-    Label(assumptionsWindow, text="").grid(row=10, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Pressure Angle", bg='black', fg='yellow').grid(row=10, column=1)
+    Label(assumptionsWindow, text=Pressure_Angle, bg='black', fg='yellow').grid(row=10, column=2)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=10, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=10, column=4)
+
     # Step 3.1: Design of Gears
 
     '''
@@ -522,10 +540,10 @@ def mainProgram():
     # Assumptions:
     No_Teeth = 14
 
-    Label(assumptionsWindow, text="No. of Teeth").grid(row=11, column=1)
-    Label(assumptionsWindow, text=No_Teeth).grid(row=11, column=2)
-    Label(assumptionsWindow, text="").grid(row=11, column=3)
-    Label(assumptionsWindow, text="").grid(row=11, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="No. of Teeth", bg='black', fg='yellow').grid(row=11, column=1)
+    Label(assumptionsWindow, text=No_Teeth, bg='black', fg='yellow').grid(row=11, column=2)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=11, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=11, column=4)  # Enter PSG Reference if possible or else leave blank
 
     print("Discharge", Discharge)
     print("Speed", Speed)
@@ -571,6 +589,9 @@ def mainProgram():
     if Actual_Bending_Stress > Bending_stress:
         print("Error: Failed at Bending")
         errorFlag('Failure at Bending')
+        assumpWinclose = Button(assumptionsWindow, text="Exit", bg='cyan', fg='black', height=2, width=10,
+                                command=lambda: Root2.destroy())
+        assumpWinclose.grid(row=12, column=2, pady=10)
         time.sleep(5)
 
     elif Actual_Bending_Stress < Bending_stress:  # Remark: What if the two values are equal? pass or fail
@@ -597,6 +618,9 @@ def mainProgram():
     if Dynamic_Force > Static_Force:
         print("Error: Dynamic force greater than static")
         errorFlag('Dynamic Force greater than Static Force')
+        assumpWinclose = Button(assumptionsWindow, text="Exit", bg='cyan', fg='black', height=2, width=10,
+                                command=lambda: Root2.destroy())
+        assumpWinclose.grid(row=12, column=2, pady=10)
         time.sleep(5)
     elif Static_Force > Dynamic_Force:
         print("##############Sucessfully passed Dynamic load testing")
@@ -611,6 +635,9 @@ def mainProgram():
     if Actual_Tensile_Stress > Tensile_Stress:
         print("Error: Failed due to Pitting")
         errorFlag('Failed due to Pitting')
+        assumpWinclose = Button(assumptionsWindow, text="Exit", bg='cyan', fg='black', height=2, width=10,
+                                command=lambda: Root2.destroy())
+        assumpWinclose.grid(row=12, column=2, pady=10)
         time.sleep(5)
         exit()
     elif Actual_Tensile_Stress < Tensile_Stress:
@@ -792,10 +819,10 @@ def mainProgram():
         Max_Bending_Moment = (Resultant_Force * 1000 * Span_Length) / 4000
         print("Max_Bending_Moment", Max_Bending_Moment)
 
-        Label(assumptionsWindow, text="Clearance Shaft").grid(row=12, column=1)
-        Label(assumptionsWindow, text=Clearance_Shaft).grid(row=12, column=2)
-        Label(assumptionsWindow, text="mm").grid(row=12, column=3)
-        Label(assumptionsWindow, text="").grid(row=12, column=4)  # Enter PSG Reference if possible or else leave blank
+        Label(assumptionsWindow, text="Clearance Shaft", bg='black', fg='yellow').grid(row=12, column=1)
+        Label(assumptionsWindow, text=Clearance_Shaft, bg='black', fg='yellow').grid(row=12, column=2)
+        Label(assumptionsWindow, text="mm", bg='black', fg='yellow').grid(row=12, column=3)
+        Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=12, column=4)
 
     # Step 3.3: Shaft Design
 
@@ -803,10 +830,10 @@ def mainProgram():
 
     Shear_Stress_PSG = 45
 
-    Label(assumptionsWindow, text="Shear Stress(PSG)").grid(row=13, column=1)
-    Label(assumptionsWindow, text=Shear_Stress_PSG).grid(row=13, column=2)
-    Label(assumptionsWindow, text="N/mm2").grid(row=13, column=3)  # change unit if it's wrong
-    Label(assumptionsWindow, text="").grid(row=13, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Shear Stress(PSG)", bg='black', fg='yellow').grid(row=13, column=1)
+    Label(assumptionsWindow, text=Shear_Stress_PSG, bg='black', fg='yellow').grid(row=13, column=2)
+    Label(assumptionsWindow, text="N/mm2", bg='black', fg='yellow').grid(row=13, column=3)  # change unit if it's wrong
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=13, column=4)
 
     Equivalent_Torque = math.sqrt((Torque ** 2) + (Max_Bending_Moment ** 2))
     print("Equivalent_Torque", Equivalent_Torque)
@@ -815,10 +842,12 @@ def mainProgram():
     print("Shear_Stress_Actual", Shear_Stress_Actual)
     if Shear_Stress_PSG > Shear_Stress_Actual:
         print("############## Sucessfully passed Shaft-Shear Failure Test")
-
-    if Shear_Stress_PSG < Shear_Stress_Actual:
+    elif Shear_Stress_PSG < Shear_Stress_Actual:
         print("############## Shaft failure due to Shear")
         errorFlag('Shaft failure due to Shear')
+        assumpWinclose = Button(assumptionsWindow, text="Exit", bg='cyan', fg='black', height=2, width=10,
+                                command=lambda: Root2.destroy())
+        assumpWinclose.grid(row=20, column=2, pady=10)
         time.sleep(5)
         exit()
 
@@ -926,15 +955,16 @@ def mainProgram():
     Tensile_Stress_Casing = 180
     FoS_Casing = 6
 
-    Label(assumptionsWindow, text="Tensile Stress Casing").grid(row=14, column=1)
-    Label(assumptionsWindow, text=Tensile_Stress_Casing).grid(row=14, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=14, column=3)  # Enter units
-    Label(assumptionsWindow, text="").grid(row=14, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Tensile Stress Casing", bg='black', fg='yellow').grid(row=14, column=1)
+    Label(assumptionsWindow, text=Tensile_Stress_Casing, bg='black', fg='yellow').grid(row=14, column=2)
+    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=14, column=3)  # Enter units
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=14, column=4)
 
-    Label(assumptionsWindow, text="FoS for Casing").grid(row=15, column=1)
-    Label(assumptionsWindow, text=FoS_Casing).grid(row=15, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=15, column=3)  # change unit if it's wrong
-    Label(assumptionsWindow, text="").grid(row=15, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="FoS for Casing", bg='black', fg='yellow').grid(row=15, column=1)
+    Label(assumptionsWindow, text=FoS_Casing, bg='black', fg='yellow').grid(row=15, column=2)
+    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=15, column=3)  # change unit if it's wrong
+    # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=15, column=4)
 
     Safe_Tensile_Stress_Casing = Tensile_Stress_Casing / FoS_Casing
 
@@ -963,15 +993,15 @@ def mainProgram():
     Stiffness_Tighting = 0.33
     Stiffness_External = 0.67
 
-    Label(assumptionsWindow, text="Stiffness Tighting").grid(row=16, column=1)
-    Label(assumptionsWindow, text=Stiffness_Tighting).grid(row=16, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=16, column=3)
-    Label(assumptionsWindow, text="").grid(row=16, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Stiffness Tighting", bg='black', fg='yellow').grid(row=16, column=1)
+    Label(assumptionsWindow, text=Stiffness_Tighting, bg='black', fg='yellow').grid(row=16, column=2)
+    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=16, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=16, column=4)
 
-    Label(assumptionsWindow, text="Stiffness External").grid(row=17, column=1)
-    Label(assumptionsWindow, text=Stiffness_External).grid(row=17, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=17, column=3)
-    Label(assumptionsWindow, text="").grid(row=16, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Stiffness External", bg='black', fg='yellow').grid(row=17, column=1)
+    Label(assumptionsWindow, text=Stiffness_External, bg='black', fg='yellow').grid(row=17, column=2)
+    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=17, column=3)
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=16, column=4)
 
     Design_Pressure = 1.2 * Pressure_in_N_mm2
     Openning_Pressure = 1.5 * Pressure_in_N_mm2
@@ -1014,10 +1044,12 @@ def mainProgram():
     # Assumptions:
     Velocity_Suction = 1
 
-    Label(assumptionsWindow, text="Velocity of Suction").grid(row=18, column=1)
-    Label(assumptionsWindow, text=Velocity_Suction).grid(row=18, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=18, column=3)  # Enter units for velocity of Suction
-    Label(assumptionsWindow, text="").grid(row=18, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Velocity of Suction", bg='black', fg='yellow').grid(row=18, column=1)
+    Label(assumptionsWindow, text=Velocity_Suction, bg='black', fg='yellow').grid(row=18, column=2)
+    # Enter units for velocity of Suction
+    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=18, column=3)
+    # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=18, column=4)
 
     Diameter_of_Suction = (((4 * Corrected_Discharge) / (math.pi * Velocity_Suction)) ** (1 / 2)) * 1000
     print("Diameter_of_Suction", Diameter_of_Suction)
@@ -1035,10 +1067,16 @@ def mainProgram():
     # Assumptions:
     Velocity_Delivery = 2
 
-    Label(assumptionsWindow, text="Velocity of Delivery").grid(row=19, column=1)
-    Label(assumptionsWindow, text=Velocity_Delivery).grid(row=19, column=2)
-    Label(assumptionsWindow, text=" ").grid(row=19, column=3)  # Enter units for velocity of Delivery
-    Label(assumptionsWindow, text="").grid(row=19, column=4)  # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="Velocity of Delivery", bg='black', fg='yellow').grid(row=19, column=1)
+    Label(assumptionsWindow, text=Velocity_Delivery, bg='black', fg='yellow').grid(row=19, column=2)
+    # Enter units for velocity of Delivery
+    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=19, column=3)
+    # Enter PSG Reference if possible or else leave blank
+    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=19, column=4)
+
+    assumpWinclose = Button(assumptionsWindow, text="Exit", bg='cyan', fg='black', height=2, width=10,
+                            command=lambda: Root2.destroy())
+    assumpWinclose.grid(row=20, column=2, pady=10)
 
     Diameter_of_Delivery = (((4 * Corrected_Discharge) / (math.pi * Velocity_Delivery)) ** (1 / 2)) * 1000
     print("Diameter_of_Delivery", Diameter_of_Delivery)
@@ -1054,226 +1092,236 @@ def mainProgram():
     # Add a grid for Output
     Root3 = Tk()
     Root3.title("Result")
+    Root3.configure(bg='black')
 
-    resultWindow = Frame(Root3)
+    resultWindow = Frame(Root3, bg='black')
     resultWindow.grid(column=0, row=0, sticky=(N, W, E, S))
     resultWindow.columnconfigure(0, weight=1)
     resultWindow.rowconfigure(0, weight=1)
-    resultWindow.pack(pady=60, padx=50)
+    resultWindow.pack(pady=20, padx=50)
 
-    Label(resultWindow, text="Drive Unit Results").grid(row=1, column=2)
+    Label(resultWindow, text="Drive Unit Results", bg='black', fg='yellow').grid(row=1, column=2)
 
-    Label(resultWindow, text="Standard Motor").grid(row=2, column=1)
-    Label(resultWindow, text=Corrected_Standard_Motor).grid(row=2, column=2)
-    Label(resultWindow, text="kW").grid(row=2, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Standard Motor", bg='black', fg='yellow').grid(row=2, column=1)
+    Label(resultWindow, text=Corrected_Standard_Motor, bg='black', fg='yellow').grid(row=2, column=2)
+    Label(resultWindow, text="kW", bg='black', fg='yellow').grid(row=2, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Motor Speed").grid(row=3, column=1)
-    Label(resultWindow, text=Speed).grid(row=3, column=2)
-    Label(resultWindow, text="RPM").grid(row=3, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Motor Speed", bg='black', fg='yellow').grid(row=3, column=1)
+    Label(resultWindow, text=Speed, bg='black', fg='yellow').grid(row=3, column=2)
+    Label(resultWindow, text="RPM", bg='black', fg='yellow').grid(row=3, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="         ").grid(row=4, column=2)
+    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=4, column=2)
 
-    Label(resultWindow, text="Transmission Unit Results").grid(row=5, column=2)
+    Label(resultWindow, text="Transmission Unit Results", bg='black', fg='yellow').grid(row=5, column=2)
 
-    Label(resultWindow, text="Amin").grid(row=6, column=1)
-    Label(resultWindow, text='%.2f' % Amin).grid(row=6, column=2)
-    Label(resultWindow, text="mm").grid(row=6, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Amin", bg='black', fg='yellow').grid(row=6, column=1)
+    Label(resultWindow, text='%.2f' % Amin, bg='black', fg='yellow').grid(row=6, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=6, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Amax").grid(row=7, column=1)
-    Label(resultWindow, text='%.2f' % Amax).grid(row=7, column=2)
-    Label(resultWindow, text="mm").grid(row=7, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Amax", bg='black', fg='yellow').grid(row=7, column=1)
+    Label(resultWindow, text='%.2f' % Amax, bg='black', fg='yellow').grid(row=7, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=7, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="B").grid(row=8, column=1)
-    Label(resultWindow, text='%.2f' % B).grid(row=8, column=2)
-    Label(resultWindow, text="mm").grid(row=8, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="B", bg='black', fg='yellow').grid(row=8, column=1)
+    Label(resultWindow, text='%.2f' % B, bg='black', fg='yellow').grid(row=8, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=8, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="C").grid(row=9, column=1)
-    Label(resultWindow, text='%.2f' % C).grid(row=9, column=2)
-    Label(resultWindow, text="mm").grid(row=9, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="C", bg='black', fg='yellow').grid(row=9, column=1)
+    Label(resultWindow, text='%.2f' % C, bg='black', fg='yellow').grid(row=9, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=9, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="E").grid(row=10, column=1)
-    Label(resultWindow, text='%.2f' % Eo).grid(row=10, column=2)
-    Label(resultWindow, text="mm").grid(row=10, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="E", bg='black', fg='yellow').grid(row=10, column=1)
+    Label(resultWindow, text='%.2f' % Eo, bg='black', fg='yellow').grid(row=10, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=10, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="G").grid(row=11, column=1)
-    Label(resultWindow, text='%.2f' % G).grid(row=11, column=2)
-    Label(resultWindow, text="mm").grid(row=11, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="G", bg='black', fg='yellow').grid(row=11, column=1)
+    Label(resultWindow, text='%.2f' % G, bg='black', fg='yellow').grid(row=11, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=11, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="         ").grid(row=12, column=2)
-    Label(resultWindow, text="Pump Unit Results").grid(row=13, column=2)
+    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=12, column=2)
+    Label(resultWindow, text="Pump Unit Results", bg='black', fg='yellow').grid(row=13, column=2)
 
-    Label(resultWindow, text="Gear Module").grid(row=14, column=1)
-    Label(resultWindow, text='%.2f' % Corrected_Standard_Module).grid(row=14, column=2)
-    Label(resultWindow, text="mm").grid(row=14, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Gear Module", bg='black', fg='yellow').grid(row=14, column=1)
+    Label(resultWindow, text='%.2f' % Corrected_Standard_Module, bg='black', fg='yellow').grid(row=14, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=14, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Outer Diameter Do").grid(row=15, column=1)
-    Label(resultWindow, text='%.2f' % New_Outer_Diameter_Do).grid(row=15, column=2)
-    Label(resultWindow, text="mm").grid(row=15, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Outer Diameter Do", bg='black', fg='yellow').grid(row=15, column=1)
+    Label(resultWindow, text='%.2f' % New_Outer_Diameter_Do, bg='black', fg='yellow').grid(row=15, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=15, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Root Diameter Dr").grid(row=16, column=1)
-    Label(resultWindow, text='%.2f' % Root_Diameter_Df).grid(row=16, column=2)
-    Label(resultWindow, text="mm").grid(row=16, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Root Diameter Dr", bg='black', fg='yellow').grid(row=16, column=1)
+    Label(resultWindow, text='%.2f' % Root_Diameter_Df, bg='black', fg='yellow').grid(row=16, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=16, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Pitch Diameter D").grid(row=17, column=1)
-    Label(resultWindow, text='%.2f' % Pitch_Diameter_D).grid(row=17, column=2)
-    Label(resultWindow, text="mm").grid(row=17, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Pitch Diameter D", bg='black', fg='yellow').grid(row=17, column=1)
+    Label(resultWindow, text='%.2f' % Pitch_Diameter_D, bg='black', fg='yellow').grid(row=17, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=17, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Width").grid(row=18, column=1)
-    Label(resultWindow, text='%.2f' % New_width).grid(row=18, column=2)
-    Label(resultWindow, text="mm").grid(row=18, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Width", bg='black', fg='yellow').grid(row=18, column=1)
+    Label(resultWindow, text='%.2f' % New_width, bg='black', fg='yellow').grid(row=18, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=18, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Clearance").grid(row=19, column=1)
-    Label(resultWindow, text='%.2f' % Clearance).grid(row=19, column=2)
-    Label(resultWindow, text="mm").grid(row=19, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Clearance", bg='black', fg='yellow').grid(row=19, column=1)
+    Label(resultWindow, text='%.2f' % Clearance, bg='black', fg='yellow').grid(row=19, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=19, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Tangential Load").grid(row=20, column=1)
-    Label(resultWindow, text='%.2f' % Tangential_Load).grid(row=20, column=2)
-    Label(resultWindow, text="kN").grid(row=20, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Tangential Load", bg='black', fg='yellow').grid(row=20, column=1)
+    Label(resultWindow, text='%.2f' % Tangential_Load, bg='black', fg='yellow').grid(row=20, column=2)
+    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=20, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Radial Load").grid(row=21, column=1)
-    Label(resultWindow, text='%.2f' % Radial_Load).grid(row=21, column=2)
-    Label(resultWindow, text="kN").grid(row=21, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Radial Load", bg='black', fg='yellow').grid(row=21, column=1)
+    Label(resultWindow, text='%.2f' % Radial_Load, bg='black', fg='yellow').grid(row=21, column=2)
+    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=21, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Hydraulic Force").grid(row=22, column=1)
-    Label(resultWindow, text='%.2f' % Hydraulic_Force).grid(row=22, column=2)
-    Label(resultWindow, text="kN").grid(row=22, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Hydraulic Force", bg='black', fg='yellow').grid(row=22, column=1)
+    Label(resultWindow, text='%.2f' % Hydraulic_Force, bg='black', fg='yellow').grid(row=22, column=2)
+    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=22, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Resultant Force").grid(row=23, column=1)
-    Label(resultWindow, text='%.2f' % Resultant_Force).grid(row=23, column=2)
-    Label(resultWindow, text="kN").grid(row=23, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Resultant Force", bg='black', fg='yellow').grid(row=23, column=1)
+    Label(resultWindow, text='%.2f' % Resultant_Force, bg='black', fg='yellow').grid(row=23, column=2)
+    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=23, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="         ").grid(row=23, column=2)
+    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=23, column=2)
 
-    Label(resultWindow, text="Radial Force").grid(row=24, column=1)
-    Label(resultWindow, text='%.2f' % Radial_Force).grid(row=24, column=2)
-    Label(resultWindow, text="kN").grid(row=24, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Radial Force", bg='black', fg='yellow').grid(row=24, column=1)
+    Label(resultWindow, text='%.2f' % Radial_Force, bg='black', fg='yellow').grid(row=24, column=2)
+    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=24, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="LMR").grid(row=25, column=1)
-    Label(resultWindow, text=Lmr).grid(row=25, column=2)
-    Label(resultWindow, text="millions").grid(row=25, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="LMR", bg='black', fg='yellow').grid(row=25, column=1)
+    Label(resultWindow, text=Lmr, bg='black', fg='yellow').grid(row=25, column=2)
+    Label(resultWindow, text="millions", bg='black', fg='yellow').grid(row=25, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Equivalent Load Peq").grid(row=26, column=1)
-    Label(resultWindow, text='%.2f' % Peq).grid(row=26, column=2)
-    Label(resultWindow, text="kN").grid(row=26, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Equivalent Load Peq", bg='black', fg='yellow').grid(row=26, column=1)
+    Label(resultWindow, text='%.2f' % Peq, bg='black', fg='yellow').grid(row=26, column=2)
+    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=26, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Dynamic Load Capacity").grid(row=27, column=1)
-    Label(resultWindow, text='%.2f' % C_inkgf).grid(row=27, column=2)
-    Label(resultWindow, text="kgf").grid(row=27, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Dynamic Load Capacity", bg='black', fg='yellow').grid(row=27, column=1)
+    Label(resultWindow, text='%.2f' % C_inkgf, bg='black', fg='yellow').grid(row=27, column=2)
+    Label(resultWindow, text="kgf", bg='black', fg='yellow').grid(row=27, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Bearing Type/Name").grid(row=28, column=1)
-    Label(resultWindow, text=Bearing).grid(row=28, column=2)
-    Label(resultWindow, text=" ").grid(row=28, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Bearing Type/Name", bg='black', fg='yellow').grid(row=28, column=1)
+    Label(resultWindow, text=Bearing, bg='black', fg='yellow').grid(row=28, column=2)
+    Label(resultWindow, text=" ", bg='black', fg='yellow').grid(row=28, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="         ").grid(row=29, column=2)
+    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=29, column=2)
 
-    Label(resultWindow, text="Coupling Number").grid(row=30, column=1)
-    Label(resultWindow, text=Coupling_No).grid(row=30, column=2)
-    Label(resultWindow, text=" ").grid(row=30, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Coupling Number", bg='black', fg='yellow').grid(row=30, column=1)
+    Label(resultWindow, text=Coupling_No, bg='black', fg='yellow').grid(row=30, column=2)
+    Label(resultWindow, text=" ", bg='black', fg='yellow').grid(row=30, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="KW per 100RPM").grid(row=31, column=1)
-    Label(resultWindow, text='%.2f' % KW_per_100_RPM).grid(row=31, column=2)
+    Label(resultWindow, text="KW per 100RPM", bg='black', fg='yellow').grid(row=31, column=1)
+    Label(resultWindow, text='%.2f' % KW_per_100_RPM, bg='black', fg='yellow').grid(row=31, column=2)
 
-    Label(resultWindow, text=" ").grid(row=31, column=3)  # Correct if unit is not 'mm'
-    Label(resultWindow, text="         ").grid(row=32, column=2)
+    Label(resultWindow, text=" ", bg='black', fg='yellow').grid(row=31, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=32, column=2)
 
-    Label(resultWindow, text="Casing Thickness").grid(row=33, column=1)
-    Label(resultWindow, text='%.2f' % Final_Thickness_Casing).grid(row=33, column=2)
-    Label(resultWindow, text="mm").grid(row=33, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Casing Thickness", bg='black', fg='yellow').grid(row=33, column=1)
+    Label(resultWindow, text='%.2f' % Final_Thickness_Casing, bg='black', fg='yellow').grid(row=33, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=33, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Bolts PCD (Casing)").grid(row=34, column=1)
-    Label(resultWindow, text='%.2f' % PCD_casing).grid(row=34, column=2)
-    Label(resultWindow, text="mm").grid(row=34, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Bolts PCD (Casing)", bg='black', fg='yellow').grid(row=34, column=1)
+    Label(resultWindow, text='%.2f' % PCD_casing, bg='black', fg='yellow').grid(row=34, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=34, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Outer Diameter of casing").grid(row=35, column=1)
-    Label(resultWindow, text='%.2f' % Outer_Diameter_Casing).grid(row=35, column=2)
-    Label(resultWindow, text="mm").grid(row=35, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Outer Diameter of casing", bg='black', fg='yellow').grid(row=35, column=1)
+    Label(resultWindow, text='%.2f' % Outer_Diameter_Casing, bg='black', fg='yellow').grid(row=35, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=35, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="         ").grid(row=36, column=2)
+    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=36, column=2)
 
-    Label(resultWindow, text="Bolts Projected Area").grid(row=37, column=1)
-    Label(resultWindow, text='%.2f' % Projected_Area).grid(row=37, column=2)
-    Label(resultWindow, text="mm2").grid(row=37, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Bolts Projected Area", bg='black', fg='yellow').grid(row=37, column=1)
+    Label(resultWindow, text='%.2f' % Projected_Area, bg='black', fg='yellow').grid(row=37, column=2)
+    Label(resultWindow, text="mm2", bg='black', fg='yellow').grid(row=37, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="External Force").grid(row=38, column=1)
-    Label(resultWindow, text='%.2f' % External_Force_Fe).grid(row=38, column=2)
-    Label(resultWindow, text="N").grid(row=38, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="External Force", bg='black', fg='yellow').grid(row=38, column=1)
+    Label(resultWindow, text='%.2f' % External_Force_Fe, bg='black', fg='yellow').grid(row=38, column=2)
+    Label(resultWindow, text="N", bg='black', fg='yellow').grid(row=38, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Openning Force").grid(row=39, column=1)
-    Label(resultWindow, text='%.2f' % Opening_Force_Fo).grid(row=39, column=2)
-    Label(resultWindow, text="N").grid(row=39, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Openning Force", bg='black', fg='yellow').grid(row=39, column=1)
+    Label(resultWindow, text='%.2f' % Opening_Force_Fo, bg='black', fg='yellow').grid(row=39, column=2)
+    Label(resultWindow, text="N", bg='black', fg='yellow').grid(row=39, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Initial Tightening Load").grid(row=40, column=1)
-    Label(resultWindow, text='%.2f' % Initial_Tightening_Force_Fi).grid(row=40, column=2)
-    Label(resultWindow, text="N").grid(row=40, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Initial Tightening Load", bg='black', fg='yellow').grid(row=40, column=1)
+    Label(resultWindow, text='%.2f' % Initial_Tightening_Force_Fi, bg='black', fg='yellow').grid(row=40, column=2)
+    Label(resultWindow, text="N", bg='black', fg='yellow').grid(row=40, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Net Force on Bolt").grid(row=41, column=1)
-    Label(resultWindow, text='%.2f' % Net_Force_Bolt_Fb).grid(row=41, column=2)
-    Label(resultWindow, text="N").grid(row=41, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Net Force on Bolt", bg='black', fg='yellow').grid(row=41, column=1)
+    Label(resultWindow, text='%.2f' % Net_Force_Bolt_Fb, bg='black', fg='yellow').grid(row=41, column=2)
+    Label(resultWindow, text="N", bg='black', fg='yellow').grid(row=41, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Number of Bolts").grid(row=42, column=1)
-    Label(resultWindow, text=PCD_Holes).grid(row=42, column=2)
-    Label(resultWindow, text="").grid(row=42, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Number of Bolts", bg='black', fg='yellow').grid(row=42, column=1)
+    Label(resultWindow, text=PCD_Holes, bg='black', fg='yellow').grid(row=42, column=2)
+    Label(resultWindow, text="", bg='black', fg='yellow').grid(row=42, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="         ").grid(row=43, column=2)
+    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=43, column=2)
 
-    Label(resultWindow, text="Piping Unit").grid(row=44, column=2)
+    Label(resultWindow, text="Piping Unit", bg='black', fg='yellow').grid(row=44, column=2)
 
-    Label(resultWindow, text="Suction Pipe Diameter").grid(row=45, column=1)
-    Label(resultWindow, text='%.2f' % Corrected_Pipe_Dia_mm).grid(row=45, column=2)
-    Label(resultWindow, text="mm").grid(row=45, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Suction Pipe Diameter", bg='black', fg='yellow').grid(row=45, column=1)
+    Label(resultWindow, text='%.2f' % Corrected_Pipe_Dia_mm, bg='black', fg='yellow').grid(row=45, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=45, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Suction Velocity").grid(row=46, column=1)
-    Label(resultWindow, text='%.2f' % Actual_Suction_Velocity).grid(row=46, column=2)
-    Label(resultWindow, text="m/s").grid(row=46, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Suction Velocity", bg='black', fg='yellow').grid(row=46, column=1)
+    Label(resultWindow, text='%.2f' % Actual_Suction_Velocity, bg='black', fg='yellow').grid(row=46, column=2)
+    Label(resultWindow, text="m/s", bg='black', fg='yellow').grid(row=46, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Delivery Pipe Diameter").grid(row=47, column=1)
-    Label(resultWindow, text='%.2f' % Corrected_Pipe_Dia_mm2).grid(row=47, column=2)
-    Label(resultWindow, text="mm").grid(row=47, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Delivery Pipe Diameter", bg='black', fg='yellow').grid(row=47, column=1)
+    Label(resultWindow, text='%.2f' % Corrected_Pipe_Dia_mm2, bg='black', fg='yellow').grid(row=47, column=2)
+    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=47, column=3)  # Correct if unit is not 'mm'
 
-    Label(resultWindow, text="Delivery Velocity").grid(row=48, column=1)
-    Label(resultWindow, text='%.2f' % Actual_Delivery_Velocity).grid(row=48, column=2)
-    Label(resultWindow, text="m/s").grid(row=48, column=3)  # Correct if unit is not 'mm'
+    Label(resultWindow, text="Delivery Velocity", bg='black', fg='yellow').grid(row=48, column=1)
+    Label(resultWindow, text='%.2f' % Actual_Delivery_Velocity, bg='black', fg='yellow').grid(row=48, column=2)
+    Label(resultWindow, text="m/s", bg='black', fg='yellow').grid(row=48, column=3)  # Correct if unit is not 'mm'
+
+    resWinclose = Button(resultWindow, text="Exit", bg='cyan', fg='black', height=2, width=10,
+                         command=lambda: Root3.destroy())
+    resWinclose.grid(row=49, column=2)
 
     Root5 = Tk()
     Root5.title("Actual V/S PSG Stresses")
+    Root5.configure(bg='black')
 
-    stress_compare = Frame(Root5)
+    stress_compare = Frame(Root5, bg='black')
     stress_compare.grid(column=0, row=0, sticky=(N, W, E, S))
     stress_compare.columnconfigure(0, weight=1)
     stress_compare.rowconfigure(0, weight=1)
     stress_compare.pack(pady=60, padx=50)  # controls fixed gap in between main content and edges, pady for y padx for x
 
-    Label(stress_compare, text="Bending Stress needed to Bend Gear is    ").grid(row=1, column=1)
-    Label(stress_compare, text='%.2f' % Actual_Bending_Stress).grid(row=1, column=2)
-    Label(stress_compare, text="   which is less than    ").grid(row=1, column=3)
-    Label(stress_compare, text='%.2f' % Bending_stress).grid(row=1, column=4)
+    Label(stress_compare, text="Bending Stress needed to Bend Gear is    ", bg='black', fg='yellow').grid(row=1, column=1)
+    Label(stress_compare, text='%.2f' % Actual_Bending_Stress, bg='black', fg='yellow').grid(row=1, column=2)
+    Label(stress_compare, text="   which is less than    ", bg='black', fg='yellow').grid(row=1, column=3)
+    Label(stress_compare, text='%.2f' % Bending_stress, bg='black', fg='yellow').grid(row=1, column=4)
 
-    Label(stress_compare, text="Dynamic load in gear is      ").grid(row=2, column=1)
-    Label(stress_compare, text='%.2f' % Dynamic_Force).grid(row=2, column=2)
-    Label(stress_compare, text="   which is less than    ").grid(row=2, column=3)
-    Label(stress_compare, text='%.2f' % Static_Force).grid(row=2, column=4)
+    Label(stress_compare, text="Dynamic load in gear is      ", bg='black', fg='yellow').grid(row=2, column=1)
+    Label(stress_compare, text='%.2f' % Dynamic_Force, bg='black', fg='yellow').grid(row=2, column=2)
+    Label(stress_compare, text="   which is less than    ", bg='black', fg='yellow').grid(row=2, column=3)
+    Label(stress_compare, text='%.2f' % Static_Force, bg='black', fg='yellow').grid(row=2, column=4)
 
-    Label(stress_compare, text="Induced Contact Stress for Pitting failure is     ").grid(row=3, column=1)
-    Label(stress_compare, text='%.2f' % Actual_Tensile_Stress).grid(row=3, column=2)
-    Label(stress_compare, text="   which is less than    ").grid(row=3, column=3)
-    Label(stress_compare, text='%.2f' % Tensile_Stress).grid(row=3, column=4)
+    Label(stress_compare, text="Induced Contact Stress for Pitting failure is     ", bg='black', fg='yellow').grid(row=3, column=1)
+    Label(stress_compare, text='%.2f' % Actual_Tensile_Stress, bg='black', fg='yellow').grid(row=3, column=2)
+    Label(stress_compare, text="   which is less than    ", bg='black', fg='yellow').grid(row=3, column=3)
+    Label(stress_compare, text='%.2f' % Tensile_Stress, bg='black', fg='yellow').grid(row=3, column=4)
 
-    Label(stress_compare, text="Shear stress needed to shear shaft is     ").grid(row=4, column=1)
-    Label(stress_compare, text='%.2f' % Shear_Stress_Actual).grid(row=4, column=2)
-    Label(stress_compare, text="   which is less than    ").grid(row=4, column=3)
-    Label(stress_compare, text='%.2f' % Shear_Stress_PSG).grid(row=4, column=4)
+    Label(stress_compare, text="Shear stress needed to shear shaft is    ", bg='black', fg='yellow').grid(row=4, column=1)
+    Label(stress_compare, text='%.2f' % Shear_Stress_Actual, bg='black', fg='yellow').grid(row=4, column=2)
+    Label(stress_compare, text="   which is less than    ", bg='black', fg='yellow').grid(row=4, column=3)
+    Label(stress_compare, text='%.2f' % Shear_Stress_PSG, bg='black', fg='yellow').grid(row=4, column=4)
 
-    Label(stress_compare, text=" ").grid(row=5, column=2)
+    Label(stress_compare, text=" ", bg='black', fg='yellow').grid(row=5, column=2)
 
-    Label(stress_compare, text="Sucessfully completed all Tests").grid(row=6, column=2)
+    Label(stress_compare, text="Sucessfully completed all Tests", bg='black', fg='yellow').grid(row=6, column=2)
 
-    plotButton = Button(stress_compare, text="Plot", height=2, width=10, command=lambda: plot())
-    plotButton.grid(row=7, column=2)
+    plotButton = Button(stress_compare, text="Plot", bg='cyan', fg='black', height=2, width=10, command=lambda: plot())
+    plotButton.grid(row=7, column=1, pady=10)
+
+    root5close = Button(stress_compare, text="Exit", bg='cyan', fg='black', height=2, width=10,
+                        command=lambda: Root5.destroy())
+    root5close.grid(row=7, column=3, pady=10)
 
     def plot():
         # Setting up dataframe for graph plotting
-        graphData = {'Allowable Stress': [1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010],
-                     'Actual Stress': [9.8, 12, 8, 7.2, 6.9, 7, 6.5, 6.2, 5.5, 6.3]
+        graphData = {'Actual Stress': [Actual_Bending_Stress, Dynamic_Force, Actual_Tensile_Stress, Shear_Stress_Actual],
+                     'Allowable Stress': [Bending_stress, Static_Force, Tensile_Stress, Shear_Stress_PSG]
                      }
         graphDataframe = DataFrame(graphData, columns=['Allowable Stress', 'Actual Stress'])
 
@@ -1281,7 +1329,7 @@ def mainProgram():
         figure = plt.Figure(figsize=(5, 10), dpi=100)
         ax = figure.add_subplot(111)
         line = FigureCanvasTkAgg(figure, Root5)
-        line.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+        line.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, padx=70)
         graphDataframe = graphDataframe[['Allowable Stress', 'Actual Stress']].groupby('Allowable Stress').sum()
         graphDataframe.plot(kind='line', legend=True, ax=ax, color='r', marker='o', fontsize=10)
         ax.set_title('Allowable Stress Vs. Actual Stress')
