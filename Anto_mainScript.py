@@ -1317,15 +1317,21 @@ def mainProgram():
                         command=lambda: Root5.destroy())
     root5close.grid(row=7, column=3, pady=10)
 
+    difference_1 = Bending_stress - Actual_Bending_Stress
+    difference_2 = Static_Force - Dynamic_Force
+    difference_3 = Tensile_Stress - Actual_Tensile_Stress
+    difference_4 = Shear_Stress_PSG - Shear_Stress_Actual
+    
+
     def plot():
         # Setting up dataframe for graph plotting
-        graphData = {'Actual Stress': [Actual_Bending_Stress, Dynamic_Force, Actual_Tensile_Stress, Shear_Stress_Actual],
-                     'Allowable Stress': [Bending_stress, Static_Force, Tensile_Stress, Shear_Stress_PSG]
+        graphData = {'Actual Stress': [difference_1, difference_2, difference_3, difference_4],
+                     'Allowable Stress': ["Bending Stress Gear", "Dynamic Load Gear", "Induced Contact Stress", "Shear Stress Shaft"]
                      }
         graphDataframe = DataFrame(graphData, columns=['Allowable Stress', 'Actual Stress'])
 
         # Ploting the graph
-        figure = plt.Figure(figsize=(5, 10), dpi=100)
+        figure = plt.Figure(figsize=(10, 10), dpi=100)
         ax = figure.add_subplot(111)
         line = FigureCanvasTkAgg(figure, Root5)
         line.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, padx=70)
