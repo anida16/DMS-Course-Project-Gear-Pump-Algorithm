@@ -294,9 +294,13 @@ def mainProgram():
     Corrected_Discharge = Discharge/(60 * 1000)
     Corrected_Pressure = Pressure * 100000
 
+    print("Corrected_Discharge",Corrected_Discharge)
+    print("Corrected_Pressure",Corrected_Pressure)
+
     Motor_Power = (Corrected_Discharge * Corrected_Pressure) / (Mech_efficiency * Volumetric_Efficiency)
 
     Motor_Power = Motor_Power * Service_Factor  # Corrected Motor Power
+    print("Motor_Power",Motor_Power)
 
     Pre_Standard_Motor = Motor_Power / 1000
     Standard_Motor = float(("{:.0f}".format(Pre_Standard_Motor)))  # Float to Integer
