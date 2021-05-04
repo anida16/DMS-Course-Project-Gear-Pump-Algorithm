@@ -493,15 +493,14 @@ def mainProgram():
     Clearance = 0.25 * Corrected_Standard_Module
     Width = 7 * Corrected_Standard_Module
     print("Old width", Width)
-    New_width = (Discharge * 1000000) / (2 * math.pi * (Corrected_Standard_Module ** 2) * No_Teeth *
-                                         Volumetric_Efficiency * Speed)
-    # print("Width", New_width)
+    New_width = (Discharge * 1000000) / (2 * math.pi * (Corrected_Standard_Module ** 2) * No_Teeth * Volumetric_Efficiency * Speed)
+    print("New Width before", New_width)
 
     if New_width < Width:
         New_width = Width
         print("Old Width is higher")
 
-    print("Width", New_width)
+    print("Width New Final", New_width)
 
     # Test for Bending
 
@@ -713,6 +712,7 @@ def mainProgram():
         Bearing = "Sliding Contact bearing"
         New_New_Outer_Diameter_Do = New_Outer_Diameter_Do - 2
         Journal_Diameter = New_New_Outer_Diameter_Do - 4
+        print("Journal_Diameter"", Journal_Diameter)
 
         # Assumption,
         Pressure_Journal_Bearing = 1.4  # from PSG 7.31
@@ -869,8 +869,12 @@ def mainProgram():
     Bolt_diameter = PSG_Database('Bolt Dia Dict', boltDesignation)
 
     # By Thick Cylinder Theory:
+<<<<<<< HEAD
     Thickness_Casing = (Outer_Diameter_Do * 9/ 2) * (
                 ((Safe_Tensile_Stress_Casing + Pmax) / (Safe_Tensile_Stress_Casing - Pmax)) ** (1 / 2) - 1)
+=======
+    Thickness_Casing = (Outer_Diameter_Do / 2) * (((Safe_Tensile_Stress_Casing + Pmax) / (Safe_Tensile_Stress_Casing - Pmax)) ** (1 / 2) - 1)
+>>>>>>> Anto
     print("Thickness_Casing", Thickness_Casing)
 
     Final_Thickness_Casing = math.ceil(Thickness_Casing / 2.) * 2
@@ -1214,9 +1218,15 @@ def mainProgram():
     myCanvas.create_text(230, 1360, text='%.2f' % PCD_casing, font=("Helvetica", 10), fill="white")
     myCanvas.create_text(300, 1360, text="mm", font=("Helvetica", 10), fill="white")
 
+<<<<<<< HEAD
     myCanvas.create_text(100, 1380, text="Outer Diameter of casing", font=("Helvetica", 10), fill="white")
     myCanvas.create_text(230, 1380, text='%.2f' % Outer_Diameter_Casing, font=("Helvetica", 10), fill="white")
     myCanvas.create_text(300, 1380, text="mm", font=("Helvetica", 10), fill="white")
+=======
+        Label(newWindow, text="KW per 100RPM", bg='black', fg='yellow').grid(row=19, column=1)
+        Label(newWindow, text='%.2f' % Standard_Max_rating, bg='black', fg='yellow').grid(row=19, column=2)
+        Label(newWindow, text=" ", bg='black', fg='yellow').grid(row=19, column=3)  # Correct if unit is not 'mm'
+>>>>>>> Anto
 
     myCanvas.create_text(100, 1400, text="Bolts Projected Area", font=("Helvetica", 10), fill="white")
     myCanvas.create_text(230, 1400, text='%.2f' % Projected_Area, font=("Helvetica", 10), fill="white")
