@@ -779,7 +779,7 @@ def mainProgram():
         Bearing = "Sliding Contact bearing"
         New_New_Outer_Diameter_Do = New_Outer_Diameter_Do - 2
         Journal_Diameter = New_New_Outer_Diameter_Do - 4
-        print("Journal_Diameter"", Journal_Diameter)
+        print("Journal_Diameter", Journal_Diameter)
 
         # Assumption,
         Pressure_Journal_Bearing = 1.4  # from PSG 7.31
