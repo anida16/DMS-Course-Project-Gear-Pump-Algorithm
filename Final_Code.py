@@ -18,7 +18,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 def errorFlag(errorMessage):
     Root3 = tk.Toplevel()
-    Root3.geometry("500x200")
+    Root3.geometry("600x200")
     Root3.title("Error Window")
 
     # Define background image
@@ -29,11 +29,11 @@ def errorFlag(errorMessage):
     errorCanvas.pack(side=LEFT, fill=BOTH, expand=1)
 
     errorCanvas.create_image(0, 0, image=bg, anchor="nw")
-    errorCanvas.create_text(40, 90, text="Error : ", font=("Helvetica", 15), fill="white")
-    errorCanvas.create_text(250, 90, text=f'{errorMessage}', font=("Helvetica", 15), fill="white")
+    errorCanvas.create_text(80, 90, text="Error : ", font=("Helvetica", 15), fill="white")
+    errorCanvas.create_text(300, 90, text=f'{errorMessage}', font=("Helvetica", 15), fill="white")
 
-    OK_btn = Button(Root3, text='OK', width=5, height=1, command=lambda: Root3.destroy())
-    OK_btnWindow = errorCanvas.create_window(200, 120, anchor="nw", window=OK_btn)
+    OK_btn = Button(Root3, text='OK', width=8, height=1, bg="cyan", fg="black", command=lambda: Root3.destroy())
+    OK_btnWindow = errorCanvas.create_window(270, 130, anchor="nw", window=OK_btn)
     time.sleep(2)
     Root3.mainloop()
 
@@ -185,7 +185,7 @@ def range_index1(table, val):
 # Initializing the GUI Window
 Root1 = Tk()
 Root1.title("Design of Gear Pump")
-Root1.geometry("400x300")
+Root1.geometry("600x350")
 
 # Define background image
 bg1 = PhotoImage(file="Background.png")
@@ -210,16 +210,16 @@ inputCanvas.create_text(520, 10, text="Spandan Bhatacharjee", font=("Helvetica",
 inputCanvas.create_text(70, 25, text="201718", font=("Helvetica", 10), fill="white")
 inputCanvas.create_text(170, 25, text="201713", font=("Helvetica", 10), fill="white")
 inputCanvas.create_text(270, 25, text="201719", font=("Helvetica", 10), fill="white")
-inputCanvas.create_text(390, 25, text="201722", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(390, 25, text="201724", font=("Helvetica", 10), fill="white")
 inputCanvas.create_text(520, 25, text="201706", font=("Helvetica", 10), fill="white")
 
-inputCanvas.create_text(100, 100, text="Discharge(LPM)", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(200, 100, text="Discharge(LPM)", font=("Helvetica", 10), fill="white")
 dischargeInput = Entry(Root1, font=("Helvetica", 10), width=10)
-inputCanvas.create_window(200, 90, anchor="nw", window=dischargeInput)
+inputCanvas.create_window(300, 90, anchor="nw", window=dischargeInput)
 
-inputCanvas.create_text(100, 130, text="Pressure(in bar)", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(200, 130, text="Pressure(in bar)", font=("Helvetica", 10), fill="white")
 pressureInput = Entry(Root1, font=("Helvetica", 10), width=10)  # speed
-inputCanvas.create_window(200, 120, anchor="nw", window=pressureInput)
+inputCanvas.create_window(300, 120, anchor="nw", window=pressureInput)
 
 # Material Selection Drop Down
 '''
@@ -241,29 +241,29 @@ Steel_40Ni_tensile = 1100
 
 material = StringVar(Root1)  # this is where value selected by user is stored #Material Designation
 bolt = StringVar(Root1)
-inputCanvas.create_text(100, 160, text="Choose Casing Bolt Diameter", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(200, 160, text="Choose Casing Bolt Diameter", font=("Helvetica", 10), fill="white")
 optList = ['CCI_Grade_20', 'CI_Grade_25', 'CI_Grade_35', 'CI_Grade_35_Heat_Treated', 'Steel_C45', 'Steel_15Ni2Cr1Mo15',
            'Steel_40Ni2Cr1Mo28']
 material.set(optList[6])
 popupMenu = OptionMenu(Root1, material, *optList)
-inputCanvas.create_window(200, 150, anchor="nw", window=popupMenu)
+inputCanvas.create_window(300, 150, anchor="nw", window=popupMenu)
 
 # controls position of name of popup grid
-inputCanvas.create_text(100, 200, text="Choose Material for Gear", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(200, 200, text="Choose Material for Gear", font=("Helvetica", 10), fill="white")
 optList2 = ['M2.5', 'M3', 'M4', 'M5', 'M6', 'M8', 'M10', 'M12', 'M16', 'M20', 'M24', 'M30', 'M33', 'M36']
 bolt.set(optList2[7])
 popupMenu2 = OptionMenu(Root1, bolt, *optList2)
-inputCanvas.create_window(200, 190, anchor="nw", window=popupMenu2)
+inputCanvas.create_window(300, 190, anchor="nw", window=popupMenu2)
 
 # Input
 # Bolts like M2.5,3,4,5,6,8,10,12,16,20,24,30,33,36
 
 # Submit button to end the input
 button1 = Button(Root1, text="Submit", bg='cyan', fg='black', height=1, width=6, command=lambda: mainProgram())
-inputCanvas.create_window(120, 250, anchor="nw", window=button1)
+inputCanvas.create_window(200, 250, anchor="nw", window=button1)
 
 button1 = Button(Root1, text="Exit", bg='cyan', fg='black', height=1, width=6, command=lambda: Root1.destroy())
-inputCanvas.create_window(200, 250, anchor="nw", window=button1)
+inputCanvas.create_window(300, 250, anchor="nw", window=button1)
 
 str_out = tk.StringVar(Root1)
 str_out.set("Output")
@@ -959,11 +959,12 @@ def mainProgram():
     print("Actual_Delivery_Velocity", Actual_Delivery_Velocity)
 
     Root2 = tk.Toplevel()
+    Root2.geometry("1000x500")
     Root2.title("Results Window")
 
     # Create a mainframe
     mainFrame = Frame(Root2)
-    mainFrame.pack(fill=BOTH, expand=1)
+    mainFrame.pack(side=LEFT, fill=BOTH, expand=1)
 
     # Create a Canvas
     myCanvas = Canvas(mainFrame)
@@ -989,310 +990,310 @@ def mainProgram():
 
     # Set Image in Canvas
     myCanvas.create_image(0, 0, image=bgIMG, anchor="nw")
-    myCanvas.create_image(150, 10, image=fgIMG, anchor="nw")
+    myCanvas.create_image(600, 15, image=fgIMG, anchor="nw")
     # Assumptions Window starts here
-    myCanvas.create_text(200, 280, text="Assumptions", font=("Helvetica", 15), fill="white")
+    myCanvas.create_text(700, 300, text="Assumptions", font=("Helvetica", 15), fill="white")
 
-    myCanvas.create_text(100, 310, text="Mechanical Efficiency", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 310, text=Mech_efficiency, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 310, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 310, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 330, text="Mechanical Efficiency", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 330, text=Mech_efficiency, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 330, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 330, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 330, text="Volumetric Efficiency", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 330, text=Volumetric_Efficiency, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 330, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 330, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 350, text="Volumetric Efficiency", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 350, text=Volumetric_Efficiency, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 350, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 350, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 350, text="Service Factor", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 350, text=Service_Factor, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 350, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 350, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 370, text="Service Factor", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 370, text=Service_Factor, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 370, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 370, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 370, text="Speed", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 370, text=Speed, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 370, text="rpm", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 370, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 390, text="Speed", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 390, text=Speed, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 390, text="rpm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 390, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 390, text="Gear Profile", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 390, text="Involute Full Depth", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 390, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 390, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 410, text="Gear Profile", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 410, text="Involute Full Depth", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 410, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 410, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 410, text="Quality of Gear", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 410, text="Precision Cut", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 410, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 410, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 430, text="Quality of Gear", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 430, text="Precision Cut", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 430, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 430, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 430, text="Type of Meshing", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 430, text="Sn gearing", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 430, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 430, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 450, text="Type of Meshing", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 450, text="Sn gearing", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 450, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 450, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 450, text="Gear Type", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 450, text="Spur Gear", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 450, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 450, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 470, text="Gear Type", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 470, text="Spur Gear", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 470, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 470, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 470, text="Gear Ratio", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 470, text=Gear_Ratio, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 470, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 470, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 490, text="Gear Ratio", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 490, text=Gear_Ratio, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 490, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 490, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 490, text="Pressure Angle", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 490, text=Pressure_Angle, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 490, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 490, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 510, text="Pressure Angle", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 510, text=Pressure_Angle, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 510, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 510, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 510, text="No. of Teeth", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 510, text=No_Teeth, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 510, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 510, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 530, text="No. of Teeth", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 530, text=No_Teeth, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 530, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 530, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 530, text="Clearance Shaft", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 530, text=Clearance_Shaft, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 530, text="mm", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 530, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 550, text="Clearance Shaft", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 550, text=Clearance_Shaft, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 550, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 550, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 550, text="Shear Stress(PSG)", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 550, text=Shear_Stress_PSG, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 550, text="N/mm2", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 550, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 570, text="Shear Stress(PSG)", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 570, text=Shear_Stress_PSG, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 570, text="N/mm2", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 570, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 570, text="Tensile Stress Casing", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 570, text=Tensile_Stress_Casing, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 570, text="N/mm2", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 570, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 590, text="Tensile Stress Casing", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 590, text=Tensile_Stress_Casing, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 590, text="N/mm2", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 590, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 590, text="FoS for Casing", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 590, text=FoS_Casing, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 590, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 590, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 610, text="FoS for Casing", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 610, text=FoS_Casing, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 610, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 610, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 610, text="Stiffness Tighting", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 610, text=Stiffness_Tighting, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 610, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 610, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 630, text="Stiffness Tighting", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 630, text=Stiffness_Tighting, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 630, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 630, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 630, text="Stiffness External", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 630, text=Stiffness_External, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 630, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 630, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 650, text="Stiffness External", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 650, text=Stiffness_External, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 650, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 650, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 650, text="Velocity of Suction", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 650, text=Velocity_Suction, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 650, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 650, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 670, text="Velocity of Suction", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 670, text=Velocity_Suction, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 670, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 670, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 670, text="Velocity of Delivery", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 670, text=Velocity_Delivery, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 670, text="", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(400, 670, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 690, text="Velocity of Delivery", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 690, text=Velocity_Delivery, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 690, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(900, 690, text="", font=("Helvetica", 10), fill="white")
     # Assumptions Window ends here
 
     # Results Window starts here
-    myCanvas.create_text(200, 700, text="Design Results", font=("Helvetica", 15), fill="white")
+    myCanvas.create_text(700, 720, text="Design Results", font=("Helvetica", 15), fill="white")
 
-    myCanvas.create_text(200, 730, text="Drive Unit Results", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(700, 750, text="Drive Unit Results", font=("Helvetica", 10, "bold"), fill="white")
 
-    myCanvas.create_text(100, 750, text="Standard Motor", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 750, text=Velocity_Delivery, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 750, text="kW", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 770, text="Standard Motor", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 770, text=Velocity_Delivery, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 770, text="kW", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 770, text="Motor Speed", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 770, text=Speed, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 770, text="RPM", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 790, text="Motor Speed", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 790, text=Speed, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 790, text="RPM", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(200, 800, text="Transmission Unit Results", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(700, 820, text="Transmission Unit Results", font=("Helvetica", 10, "bold"), fill="white")
 
-    myCanvas.create_text(100, 820, text="Amin", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 820, text='%.2f' % Amin, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 820, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 840, text="Amin", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 840, text='%.2f' % Amin, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 840, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 840, text="Amax", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 840, text='%.2f' % Amax, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 840, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 860, text="Amax", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 860, text='%.2f' % Amax, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 860, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 860, text="B", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 860, text='%.2f' % B, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 860, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 880, text="B", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 880, text='%.2f' % B, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 880, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 880, text="C", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 880, text='%.2f' % C, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 880, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 900, text="C", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 900, text='%.2f' % C, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 900, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 900, text="E", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 900, text='%.2f' % Eo, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 900, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 920, text="E", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 920, text='%.2f' % Eo, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 920, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 920, text="G", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 920, text='%.2f' % G, font=("Helvetica", 8), fill="white")
-    myCanvas.create_text(300, 920, text="mm", font=("Helvetica", 8), fill="white")
+    myCanvas.create_text(600, 940, text="G", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 940, text='%.2f' % G, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 940, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(200, 950, text="Pump Unit Results", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(700, 970, text="Pump Unit Results", font=("Helvetica", 10, "bold"), fill="white")
 
-    myCanvas.create_text(100, 970, text="Gear Module", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 970, text='%.2f' % Corrected_Standard_Module, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 970, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 990, text="Gear Module", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 990, text='%.2f' % Corrected_Standard_Module, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 990, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 990, text="Outer Diameter Do", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 990, text='%.2f' % New_Outer_Diameter_Do, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 990, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1010, text="Outer Diameter Do", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1010, text='%.2f' % New_Outer_Diameter_Do, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1010, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1010, text="Root Diameter Dr", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1010, text='%.2f' % Root_Diameter_Df, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1010, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1030, text="Root Diameter Dr", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1030, text='%.2f' % Root_Diameter_Df, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1030, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1020, text="Pitch Diameter D", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1020, text='%.2f' % Pitch_Diameter_D, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1020, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1050, text="Pitch Diameter D", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1050, text='%.2f' % Pitch_Diameter_D, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1050, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1040, text="Width", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1040, text='%.2f' % New_width, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1040, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1070, text="Width", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1070, text='%.2f' % New_width, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1070, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1060, text="Clearance", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1060, text='%.2f' % Clearance, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1060, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1090, text="Clearance", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1090, text='%.2f' % Clearance, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1090, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1080, text="Tangential Load", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1080, text='%.2f' % Tangential_Load, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1080, text="kN", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1110, text="Tangential Load", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1110, text='%.2f' % Tangential_Load, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1110, text="kN", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1100, text="Radial Load", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1100, text='%.2f' % Radial_Load, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1100, text="kN", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1130, text="Radial Load", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1130, text='%.2f' % Radial_Load, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1130, text="kN", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1120, text="Hydraulic Force", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1120, text='%.2f' % Hydraulic_Force, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1120, text="kN", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1150, text="Hydraulic Force", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1150, text='%.2f' % Hydraulic_Force, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1150, text="kN", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1140, text="Hydraulic Force", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1140, text='%.2f' % Hydraulic_Force, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1140, text="kN", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1170, text="Hydraulic Force", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1170, text='%.2f' % Hydraulic_Force, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1170, text="kN", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1160, text="Resultant Force", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1160, text='%.2f' % Resultant_Force, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1160, text="kN", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1190, text="Resultant Force", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1190, text='%.2f' % Resultant_Force, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1190, text="kN", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1180, text="Radial Force", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1180, text='%.2f' % Radial_Force, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1180, text="kN", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1210, text="Radial Force", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1210, text='%.2f' % Radial_Force, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1210, text="kN", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1200, text="Radial Force", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1200, text='%.2f' % Radial_Force, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1200, text="kN", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1230, text="Radial Force", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1230, text='%.2f' % Radial_Force, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1230, text="kN", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1220, text="LMR", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1220, text=Lmr, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1220, text="millions", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1250, text="LMR", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1250, text=Lmr, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1250, text="millions", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1240, text="Equivalent Load Peq", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1240, text='%.2f' % Peq, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1240, text="kN", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1270, text="Equivalent Load Peq", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1270, text='%.2f' % Peq, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1270, text="kN", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1260, text="Dynamic Load Capacity", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1260, text='%.2f' % C_inkgf, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1260, text="kgf", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1290, text="Dynamic Load Capacity", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1290, text='%.2f' % C_inkgf, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1290, text="kgf", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1280, text="Bearing Type/Name", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1280, text=Bearing, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1280, text=" ", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1310, text="Bearing Type/Name", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1310, text=Bearing, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1310, text=" ", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1300, text="Coupling Number", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1300, text=Coupling_No, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1300, text=" ", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1330, text="Coupling Number", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1330, text=Coupling_No, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1330, text=" ", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1320, text="KW per 100RPM", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1320, text='%.2f' % KW_per_100_RPM, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1320, text=" ", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1350, text="KW per 100RPM", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1350, text='%.2f' % KW_per_100_RPM, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1350, text=" ", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1340, text="Casing Thickness", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1340, text='%.2f' % Final_Thickness_Casing, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1340, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1370, text="Casing Thickness", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1370, text='%.2f' % Final_Thickness_Casing, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1370, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1360, text="Bolts PCD (Casing)", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1360, text='%.2f' % PCD_casing, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1360, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1390, text="Bolts PCD (Casing)", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1390, text='%.2f' % PCD_casing, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1390, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1380, text="Outer Diameter of casing", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1380, text='%.2f' % Outer_Diameter_Casing, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1380, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1410, text="Outer Diameter of casing", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1410, text='%.2f' % Outer_Diameter_Casing, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1410, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1400, text="Bolts Projected Area", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1400, text='%.2f' % Projected_Area, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1400, text="mm2", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1430, text="Bolts Projected Area", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1430, text='%.2f' % Projected_Area, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1430, text="mm2", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1420, text="External Force", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1420, text='%.2f' % External_Force_Fe, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1420, text="N", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1450, text="External Force", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1450, text='%.2f' % External_Force_Fe, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1450, text="N", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1440, text="Openning Force", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1440, text='%.2f' % Opening_Force_Fo, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1440, text="N", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1470, text="Openning Force", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1470, text='%.2f' % Opening_Force_Fo, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1470, text="N", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1460, text="Initial Tightening Load", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1460, text='%.2f' % Initial_Tightening_Force_Fi, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1460, text="N", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1490, text="Initial Tightening Load", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1490, text='%.2f' % Initial_Tightening_Force_Fi, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1490, text="N", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1480, text="Net Force on Bolt", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1480, text='%.2f' % Net_Force_Bolt_Fb, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1480, text="N", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1510, text="Net Force on Bolt", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1510, text='%.2f' % Net_Force_Bolt_Fb, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1510, text="N", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1500, text="Number of Bolts", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1500, text=PCD_Holes, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1500, text="", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1530, text="Number of Bolts", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1530, text=PCD_Holes, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1530, text="", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(200, 1530, text="Piping Unit", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(700, 1560, text="Piping Unit", font=("Helvetica", 10, "bold"), fill="white")
 
-    myCanvas.create_text(100, 1550, text="Suction Pipe Diameter", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1550, text='%.2f' % Corrected_Pipe_Dia_mm, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1550, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1580, text="Suction Pipe Diameter", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1580, text='%.2f' % Corrected_Pipe_Dia_mm, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1580, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1570, text="Suction Velocity", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1570, text='%.2f' % Actual_Suction_Velocity, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1570, text="m/s", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1600, text="Suction Velocity", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1600, text='%.2f' % Actual_Suction_Velocity, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1600, text="m/s", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1590, text="Delivery Pipe Diameter", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1590, text='%.2f' % Corrected_Pipe_Dia_mm2, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1590, text="mm", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1620, text="Delivery Pipe Diameter", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1620, text='%.2f' % Corrected_Pipe_Dia_mm2, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1620, text="mm", font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(100, 1610, text="Delivery Velocity", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(230, 1610, text='%.2f' % Actual_Delivery_Velocity, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1610, text="m/s", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(600, 1640, text="Delivery Velocity", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1640, text='%.2f' % Actual_Delivery_Velocity, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(800, 1640, text="m/s", font=("Helvetica", 10), fill="white")
     # Results Window ends here
 
     # Actual Vs. PSG Window starts here
-    myCanvas.create_text(200, 1650, text="Actual Vs. PSG Stress", font=("Helvetica", 15), fill="white")
+    myCanvas.create_text(700, 1670, text="Actual Vs. PSG Stress", font=("Helvetica", 15), fill="white")
 
-    myCanvas.create_text(130, 1680, text="Bending Stress needed to Bend Gear is", font=("Helvetica", 10),
+    myCanvas.create_text(550, 1700, text="Bending Stress needed to Bend Gear is", font=("Helvetica", 10),
                          fill="white")
-    myCanvas.create_text(300, 1680, text='%.2f' % Actual_Bending_Stress, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(380, 1680, text="which is less than", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(500, 1680, text='%.2f' % Bending_stress, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1700, text='%.2f' % Actual_Bending_Stress, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(820, 1700, text="which is less than", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(920, 1700, text='%.2f' % Bending_stress, font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(130, 1700, text="Dynamic load in gear is", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(300, 1700, text='%.2f' % Dynamic_Force, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(380, 1700, text="which is less than", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(500, 1700, text='%.2f' % Static_Force, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(550, 1730, text="Dynamic load in gear is", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1730, text='%.2f' % Dynamic_Force, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(820, 1730, text="which is less than", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(920, 1730, text='%.2f' % Static_Force, font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(130, 1720, text="Induced Contact Stress for Pitting failure is", font=("Helvetica", 10),
+    myCanvas.create_text(550, 1750, text="Induced Contact Stress for Pitting failure is", font=("Helvetica", 10),
                          fill="white")
-    myCanvas.create_text(300, 1720, text='%.2f' % Actual_Tensile_Stress, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(380, 1720, text="which is less than", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(500, 1720, text='%.2f' % Tensile_Stress, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1750, text='%.2f' % Actual_Tensile_Stress, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(820, 1750, text="which is less than", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(920, 1750, text='%.2f' % Tensile_Stress, font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(130, 1740, text="Shear stress needed to shear shaft is", font=("Helvetica", 10),
+    myCanvas.create_text(550, 1770, text="Shear stress needed to shear shaft is", font=("Helvetica", 10),
                          fill="white")
-    myCanvas.create_text(300, 1740, text='%.2f' % Shear_Stress_Actual, font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(380, 1740, text="which is less than", font=("Helvetica", 10), fill="white")
-    myCanvas.create_text(500, 1740, text='%.2f' % Shear_Stress_PSG, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(730, 1770, text='%.2f' % Shear_Stress_Actual, font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(820, 1770, text="which is less than", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(920, 1770, text='%.2f' % Shear_Stress_PSG, font=("Helvetica", 10), fill="white")
 
-    myCanvas.create_text(200, 1760, text="Sucessfully completed all Tests", font=("Helvetica", 10), fill="white")
+    myCanvas.create_text(750, 1800, text="Sucessfully completed all Tests", font=("Helvetica", 10), fill="white")
 
-    button3 = Button(Root2, text="Plot", bg='cyan', fg='black', height=1, width=5, command=lambda: plot())
-    myCanvas.create_window(200, 1790, anchor="nw", window=button3)
-    button4 = Button(Root2, text="Exit", height=1, width=5, command=lambda: Root2.destroy())
-    myCanvas.create_window(300, 1790, anchor="nw", window=button4)
+    button3 = Button(Root2, text="Plot", bg='cyan', fg='black', height=1, width=8, command=lambda: plot())
+    myCanvas.create_window(600, 1830, anchor="nw", window=button3)
+    button4 = Button(Root2, text="Exit", bg='cyan', fg='black', height=1, width=8, command=lambda: Root2.destroy())
+    myCanvas.create_window(750, 1830, anchor="nw", window=button4)
     # Actual Vs. PSG Window ends here
 
     def plot():
