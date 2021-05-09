@@ -1,46 +1,40 @@
 import math
 import tkinter as tk
 from tkinter import *
+from tkinter import ttk
 import time
-from PIL import ImageTk, Image
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 # Windows of the GUI :-
-#     Root1 -> Input Window
-#     Root2 -> Assumptions Window
-#     Root3 -> Results Window
-#     Root4 -> Error Window
-#     Root5 -> Actual vs PSG Stresses
+#     Root1 ->  Input Window
+#     Root2 ->  Assumptions, Results and Actual vs PSG Stresses Window
+#     Root3 ->  Error Window
+#     Root4 ->  Graph Window
 
 
 def errorFlag(errorMessage):
-    Root4 = Tk()
-    Root4.title("Error Window")
-    Root4.configure(bg='black')
+    Root3 = tk.Toplevel()
+    Root3.geometry("600x200")
+    Root3.title("Error Window")
 
-    errorWindow = Frame(Root4, bg='black')
-    errorWindow.grid(column=0, row=0, sticky=(N, W, E, S))
-    errorWindow.columnconfigure(0, weight=1)
-    errorWindow.rowconfigure(0, weight=1)
-    errorWindow.pack(pady=60, padx=50)  # controls fixed gap in between main content and edges, pady for y padx for x
-    Label(errorWindow, text="Error    :", fg='yellow', bg='black').grid(row=1, column=1)
-    Label(errorWindow, text=errorMessage, bg='black', fg='yellow').grid(row=1, column=2)
+    # Define background image
+    bg = PhotoImage(file="Tech_Background.png")
 
-    OK_btn = Button(errorWindow, text='Exit', width=15, bd=0, bg='cyan', fg='black', pady=5,
-                    command=lambda: Root4.destroy())
-    OK_btn.grid(row=2, column=2, pady=10)
+    # Create a Canvas
+    errorCanvas = Canvas(Root3)
+    errorCanvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+    errorCanvas.create_image(0, 0, image=bg, anchor="nw")
+    errorCanvas.create_text(80, 90, text="Error : ", font=("Helvetica", 15), fill="white")
+    errorCanvas.create_text(300, 90, text=f'{errorMessage}', font=("Helvetica", 15), fill="white")
+
+    OK_btn = Button(Root3, text='OK', width=8, height=1, bg="cyan", fg="black", command=lambda: Root3.destroy())
+    OK_btnWindow = errorCanvas.create_window(270, 130, anchor="nw", window=OK_btn)
     time.sleep(2)
-    Root4.mainloop()
-
-
-def displayImage():
-    img = ImageTk.PhotoImage(Image.open(r"Transmission Unit.png"))
-    myLabel = Label(image=img)
-    myLabel.pack()
-    Root1.mainloop()
+    Root3.mainloop()
 
 
 def PSG_Database(database, value):  # centralised database
@@ -190,21 +184,33 @@ def range_index1(table, val):
 # Initializing the GUI Window
 Root1 = Tk()
 Root1.title("Design of Gear Pump")
-Root1.configure(bg='black')
+Root1.geometry("600x350")
 
-inputWindow = Frame(Root1, bg='black')
-inputWindow.grid(column=0, row=0, sticky=(N, W, E, S))
-inputWindow.columnconfigure(0, weight=1)
-inputWindow.rowconfigure(0, weight=1)
-inputWindow.pack(pady=10, padx=50)  # controls fixed gap inbetween main content and edges, pady for y padx for x
+# Define background image
+bg1 = PhotoImage(file="Tech_Background.png")
 
-dischargeInput = tk.DoubleVar(Root1)
-pressureInput = tk.DoubleVar(Root1)
+# Create a Canvas
+inputCanvas = Canvas(Root1)
+inputCanvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+inputCanvas.create_image(0, 0, image=bg1, anchor="nw")
 
 '''
 Input
 Discharge in LPM (Litre per minute) and Pressure (in bar)
 '''
+# Input Boxes for the GUI Design
+# Discharge and Input Pressure
+inputCanvas.create_text(300, 15, text="DMS Course Project", font=("Helvetica", 15, "bold"), fill="white")
+inputCanvas.create_text(300, 40, text="Gear Pump Python Algorithm", font=("Helvetica", 15, "bold"), fill="white")
+
+inputCanvas.create_text(200, 90, text="Discharge(LPM)", font=("Helvetica", 10), fill="white")
+dischargeInput = Entry(Root1, font=("Helvetica", 10), width=10)
+inputCanvas.create_window(300, 80, anchor="nw", window=dischargeInput)
+
+inputCanvas.create_text(200, 120, text="Pressure(in bar)", font=("Helvetica", 10), fill="white")
+pressureInput = Entry(Root1, font=("Helvetica", 10), width=10)  # speed
+inputCanvas.create_window(300, 110, anchor="nw", window=pressureInput)
 
 # Material Selection Drop Down
 '''
@@ -224,43 +230,42 @@ Steel_40Ni_bend = 400
 Steel_40Ni_tensile = 1100
 '''
 
-material = StringVar(inputWindow)  # this is where value selected by user is stored #Material Designation
-bolt = StringVar(inputWindow)
+material = StringVar(Root1)  # this is where value selected by user is stored #Material Designation
+bolt = StringVar(Root1)
+inputCanvas.create_text(200, 150, text="Choose Casing Bolt Diameter", font=("Helvetica", 10), fill="white")
 optList = ['CCI_Grade_20', 'CI_Grade_25', 'CI_Grade_35', 'CI_Grade_35_Heat_Treated', 'Steel_C45', 'Steel_15Ni2Cr1Mo15',
            'Steel_40Ni2Cr1Mo28']
 material.set(optList[6])
-popupMenu = OptionMenu(inputWindow, material, *optList)
+popupMenu = OptionMenu(Root1, material, *optList)
+inputCanvas.create_window(300, 140, anchor="nw", window=popupMenu)
 
+# controls position of name of popup grid
+inputCanvas.create_text(200, 190, text="Choose Material for Gear", font=("Helvetica", 10), fill="white")
 optList2 = ['M2.5', 'M3', 'M4', 'M5', 'M6', 'M8', 'M10', 'M12', 'M16', 'M20', 'M24', 'M30', 'M33', 'M36']
 bolt.set(optList2[7])
-popupMenu2 = OptionMenu(inputWindow, bolt, *optList2)
-
-# Input Boxes for the GUI Design
-# Discharge and Input Pressure
-Label(inputWindow, text="Discharge(LPM)", bg='black', fg='yellow').grid(row=1, column=1)
-dischargeInput = tk.Entry(inputWindow)  # power
-dischargeInput.grid(row=1, column=2, pady=3)
-
-Label(inputWindow, text="Pressure(in bar)", bg='black', fg='yellow').grid(row=2, column=1)
-pressureInput = tk.Entry(inputWindow)  # speed
-pressureInput.grid(row=2, column=2, pady=3)
+popupMenu2 = OptionMenu(Root1, bolt, *optList2)
+inputCanvas.create_window(300, 180, anchor="nw", window=popupMenu2)
 
 # Input
 # Bolts like M2.5,3,4,5,6,8,10,12,16,20,24,30,33,36
 
-Label(inputWindow, text="Choose Casing Bolt Diameter", bg='black', fg='yellow').grid(row=3, column=1)
-popupMenu2.grid(row=3, column=2, pady=3)  # controls position of popup grid
-
-# controls position of name of popup grid
-Label(inputWindow, text="Choose Material for Gear", bg='black', fg='yellow').grid(row=8, column=1)
-popupMenu.grid(row=8, column=2, pady=3)  # controls position of popup grid
-
 # Submit button to end the input
-b1 = tk.Button(inputWindow, text='Submit', bg='cyan', fg='black', command=lambda: mainProgram())
-b1.grid(row=13, column=1, pady=10)
+button1 = Button(Root1, text="Submit", bg='cyan', fg='black', height=1, width=6, command=lambda: mainProgram())
+inputCanvas.create_window(200, 240, anchor="nw", window=button1)
 
-imageButton = tk.Button(inputWindow, text='Image', bg='cyan', fg='black', command=lambda: displayImage())
-imageButton.grid(row=13, column=2, pady=10)
+button1 = Button(Root1, text="Exit", bg='cyan', fg='black', height=1, width=6, command=lambda: Root1.destroy())
+inputCanvas.create_window(300, 240, anchor="nw", window=button1)
+
+inputCanvas.create_text(70, 315, text="Anthony D'souza", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(170, 315, text="Anish Dalvi", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(270, 315, text="Rohan D'souza", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(390, 315, text="Abhishek Gupta", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(520, 315, text="Spandan Bhatacharjee", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(70, 335, text="201718", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(170, 335, text="201713", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(270, 335, text="201719", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(390, 335, text="201724", font=("Helvetica", 10), fill="white")
+inputCanvas.create_text(520, 335, text="201706", font=("Helvetica", 10), fill="white")
 
 str_out = tk.StringVar(Root1)
 str_out.set("Output")
@@ -308,46 +313,14 @@ def mainProgram():
     # Bolt designation selected will be used to determine the bolt diameter
     boltDesignation = bolt.get()
 
-    Root2 = Tk()
-    Root2.title("Assumptions")
-    Root2.configure(bg='black')
-
-    assumptionsWindow = Frame(Root2, bg='black')
-    assumptionsWindow.grid(column=0, row=0, sticky=(N, W, E, S))  # PLEASE CORRECT THIS
-    assumptionsWindow.columnconfigure(0, weight=1)
-    assumptionsWindow.rowconfigure(0, weight=1)
-    assumptionsWindow.pack(pady=60, padx=50)
-
     # Assumptions Start
     Mech_efficiency = 0.93
     Volumetric_Efficiency = 0.97
     Service_Factor = 1.5  # PSG 7.109 for Rotary Pump
 
-    Label(assumptionsWindow, text="Mechanical Efficiency", bg='black', fg='yellow').grid(row=1, column=1)
-    Label(assumptionsWindow, text=Mech_efficiency, bg='black', fg='yellow').grid(row=1, column=2)
-    # Enter the units if possible or else leave blank,
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=1, column=3)
-    # Enter PSG Reference if possible or else leave blank
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=1, column=4)
-
-    Label(assumptionsWindow, text="Volumetric Efficiency", bg='black', fg='yellow').grid(row=2, column=1)
-    Label(assumptionsWindow, text=Volumetric_Efficiency, bg='black', fg='yellow').grid(row=2, column=2)
-    # Enter the units if possible or else leave blank
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=2, column=3)
-    # Enter PSG Reference if possible or else leave blank
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=2, column=4)
-
-    Label(assumptionsWindow, text="Service Factor", bg='black', fg='yellow').grid(row=3, column=1)
-    Label(assumptionsWindow, text=Service_Factor, bg='black', fg='yellow').grid(row=3, column=2)
-    # Enter the units if possible or else leave blank
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=3, column=3)
-    # Enter PSG Reference if possible or else leave blank
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=1, column=4)
-
     # Assumptions Ends
 
     # Part 1: Drive Unit
-
     Discharge = float(dischargeInput.get())
     print("Discharge = ", Discharge)
     Pressure = float(pressureInput.get())
@@ -379,10 +352,7 @@ def mainProgram():
     # We completely assume the Speed as 960RPM (Rukhande Sir said too), no mention anywhere
     Speed = 960
 
-    Label(assumptionsWindow, text="Speed", bg='black', fg='yellow').grid(row=4, column=1)
-    Label(assumptionsWindow, text=Speed, bg='black', fg='yellow').grid(row=4, column=2)
-    Label(assumptionsWindow, text="rpm", bg='black', fg='yellow').grid(row=4, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=4, column=4)  # Enter PSG Reference if possible or else leave blank
+
     # Part 1 End: Drive Unit
 
     #################################################################################################################
@@ -497,36 +467,6 @@ def mainProgram():
     Gear_Ratio = 1
     Pressure_Angle = 20
 
-    Label(assumptionsWindow, text="Gear Profile", bg='black', fg='yellow').grid(row=5, column=1)
-    Label(assumptionsWindow, text="Involute Full Depth", bg='black', fg='yellow').grid(row=5, column=2)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=5, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=5, column=4)
-
-    Label(assumptionsWindow, text="Quality of Gear", bg='black', fg='yellow').grid(row=6, column=1)
-    Label(assumptionsWindow, text="Precision Cut", bg='black', fg='yellow').grid(row=6, column=2)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=6, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=6, column=4)
-
-    Label(assumptionsWindow, text="Type of Meshing", bg='black', fg='yellow').grid(row=7, column=1)
-    Label(assumptionsWindow, text="Sn gearing", bg='black', fg='yellow').grid(row=7, column=2)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=7, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=7, column=4)
-
-    Label(assumptionsWindow, text="Gear Type", bg='black', fg='yellow').grid(row=8, column=1)
-    Label(assumptionsWindow, text="Spur Gear", bg='black', fg='yellow').grid(row=8, column=2)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=8, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=8, column=4)
-
-    Label(assumptionsWindow, text="Gear Ratio", bg='black', fg='yellow').grid(row=9, column=1)
-    Label(assumptionsWindow, text=Gear_Ratio, bg='black', fg='yellow').grid(row=9, column=2)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=9, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=9, column=4)
-
-    Label(assumptionsWindow, text="Pressure Angle", bg='black', fg='yellow').grid(row=10, column=1)
-    Label(assumptionsWindow, text=Pressure_Angle, bg='black', fg='yellow').grid(row=10, column=2)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=10, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=10, column=4)
-
     # Step 3.1: Design of Gears
 
     '''
@@ -536,11 +476,6 @@ def mainProgram():
     '''
     # Assumptions:
     No_Teeth = 14
-
-    Label(assumptionsWindow, text="No. of Teeth", bg='black', fg='yellow').grid(row=11, column=1)
-    Label(assumptionsWindow, text=No_Teeth, bg='black', fg='yellow').grid(row=11, column=2)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=11, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=11, column=4)  # Enter PSG Reference if possible or else leave blank
 
     print("Discharge", Discharge)
     print("Speed", Speed)
@@ -808,21 +743,11 @@ def mainProgram():
         Max_Bending_Moment = (Resultant_Force * 1000 * Span_Length) / 4000
         print("Max_Bending_Moment", Max_Bending_Moment)
 
-        Label(assumptionsWindow, text="Clearance Shaft", bg='black', fg='yellow').grid(row=12, column=1)
-        Label(assumptionsWindow, text=Clearance_Shaft, bg='black', fg='yellow').grid(row=12, column=2)
-        Label(assumptionsWindow, text="mm", bg='black', fg='yellow').grid(row=12, column=3)
-        Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=12, column=4)
-
     # Step 3.3: Shaft Design
 
     # Assumptions:
 
     Shear_Stress_PSG = 45
-
-    Label(assumptionsWindow, text="Shear Stress(PSG)", bg='black', fg='yellow').grid(row=13, column=1)
-    Label(assumptionsWindow, text=Shear_Stress_PSG, bg='black', fg='yellow').grid(row=13, column=2)
-    Label(assumptionsWindow, text="N/mm2", bg='black', fg='yellow').grid(row=13, column=3)  # change unit if it's wrong
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=13, column=4)
 
     Equivalent_Torque = math.sqrt((Torque ** 2) + (Max_Bending_Moment ** 2))
     print("Equivalent_Torque", Equivalent_Torque)
@@ -940,25 +865,13 @@ def mainProgram():
     # Assumptions:
     Tensile_Stress_Casing = 180
     FoS_Casing = 6
-
-    Label(assumptionsWindow, text="Tensile Stress Casing", bg='black', fg='yellow').grid(row=14, column=1)
-    Label(assumptionsWindow, text=Tensile_Stress_Casing, bg='black', fg='yellow').grid(row=14, column=2)
-    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=14, column=3)  # Enter units
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=14, column=4)
-
-    Label(assumptionsWindow, text="FoS for Casing", bg='black', fg='yellow').grid(row=15, column=1)
-    Label(assumptionsWindow, text=FoS_Casing, bg='black', fg='yellow').grid(row=15, column=2)
-    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=15, column=3)  # change unit if it's wrong
-    # Enter PSG Reference if possible or else leave blank
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=15, column=4)
-
     Safe_Tensile_Stress_Casing = Tensile_Stress_Casing / FoS_Casing
 
     # Fetch Bolt Diameter from PSG Database
     Bolt_diameter = PSG_Database('Bolt Dia Dict', boltDesignation)
 
     # By Thick Cylinder Theory:
-    Thickness_Casing = (Outer_Diameter_Do / 2) * (
+    Thickness_Casing = (Outer_Diameter_Do * 9/ 2) * (
                 ((Safe_Tensile_Stress_Casing + Pmax) / (Safe_Tensile_Stress_Casing - Pmax)) ** (1 / 2) - 1)
     print("Thickness_Casing", Thickness_Casing)
 
@@ -978,16 +891,6 @@ def mainProgram():
     Tensile_Stress_Fastener = 80  # Change to dropdown
     Stiffness_Tighting = 0.33
     Stiffness_External = 0.67
-
-    Label(assumptionsWindow, text="Stiffness Tighting", bg='black', fg='yellow').grid(row=16, column=1)
-    Label(assumptionsWindow, text=Stiffness_Tighting, bg='black', fg='yellow').grid(row=16, column=2)
-    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=16, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=16, column=4)
-
-    Label(assumptionsWindow, text="Stiffness External", bg='black', fg='yellow').grid(row=17, column=1)
-    Label(assumptionsWindow, text=Stiffness_External, bg='black', fg='yellow').grid(row=17, column=2)
-    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=17, column=3)
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=16, column=4)
 
     Design_Pressure = 1.2 * Pressure_in_N_mm2
     Openning_Pressure = 1.5 * Pressure_in_N_mm2
@@ -1030,13 +933,6 @@ def mainProgram():
     # Assumptions:
     Velocity_Suction = 1
 
-    Label(assumptionsWindow, text="Velocity of Suction", bg='black', fg='yellow').grid(row=18, column=1)
-    Label(assumptionsWindow, text=Velocity_Suction, bg='black', fg='yellow').grid(row=18, column=2)
-    # Enter units for velocity of Suction
-    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=18, column=3)
-    # Enter PSG Reference if possible or else leave blank
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=18, column=4)
-
     Diameter_of_Suction = (((4 * Corrected_Discharge) / (math.pi * Velocity_Suction)) ** (1 / 2)) * 1000
     print("Diameter_of_Suction", Diameter_of_Suction)
 
@@ -1053,17 +949,6 @@ def mainProgram():
     # Assumptions:
     Velocity_Delivery = 2
 
-    Label(assumptionsWindow, text="Velocity of Delivery", bg='black', fg='yellow').grid(row=19, column=1)
-    Label(assumptionsWindow, text=Velocity_Delivery, bg='black', fg='yellow').grid(row=19, column=2)
-    # Enter units for velocity of Delivery
-    Label(assumptionsWindow, text=" ", bg='black', fg='yellow').grid(row=19, column=3)
-    # Enter PSG Reference if possible or else leave blank
-    Label(assumptionsWindow, text="", bg='black', fg='yellow').grid(row=19, column=4)
-
-    assumpWinclose = Button(assumptionsWindow, text="Exit", bg='cyan', fg='black', height=2, width=10,
-                            command=lambda: Root2.destroy())
-    assumpWinclose.grid(row=20, column=2, pady=10)
-
     Diameter_of_Delivery = (((4 * Corrected_Discharge) / (math.pi * Velocity_Delivery)) ** (1 / 2)) * 1000
     print("Diameter_of_Delivery", Diameter_of_Delivery)
 
@@ -1075,254 +960,377 @@ def mainProgram():
     Actual_Delivery_Velocity = (4 * Corrected_Discharge * 1000000) / (math.pi * Corrected_Pipe_Dia_mm2 ** 2)
     print("Actual_Delivery_Velocity", Actual_Delivery_Velocity)
 
-    # Add a grid for Output
-    Root3 = Tk()
-    Root3.title("Result")
-    Root3.configure(bg='black')
+    Root2 = tk.Toplevel()
+    Root2.geometry("600x500")
+    Root2.title("Results Window")
 
-    resultWindow = Frame(Root3, bg='black')
-    resultWindow.grid(column=0, row=0, sticky=(N, W, E, S))
-    resultWindow.columnconfigure(0, weight=1)
-    resultWindow.rowconfigure(0, weight=1)
-    resultWindow.pack(pady=20, padx=50)
+    # Create a mainframe
+    mainFrame = Frame(Root2)
+    mainFrame.pack(side=LEFT, fill=BOTH, expand=1)
 
-    Label(resultWindow, text="Drive Unit Results", bg='black', fg='yellow').grid(row=1, column=2)
+    # Create a Canvas
+    myCanvas = Canvas(mainFrame)
+    myCanvas.pack(side=LEFT, fill=BOTH, expand=1)
 
-    Label(resultWindow, text="Standard Motor", bg='black', fg='yellow').grid(row=2, column=1)
-    Label(resultWindow, text=Corrected_Standard_Motor, bg='black', fg='yellow').grid(row=2, column=2)
-    Label(resultWindow, text="kW", bg='black', fg='yellow').grid(row=2, column=3)  # Correct if unit is not 'mm'
+    # Add a scrollbar to the canvas
+    myScrollbar = ttk.Scrollbar(mainFrame, orient=VERTICAL, command=myCanvas.yview)
+    myScrollbar.pack(side=RIGHT, fill=Y)
 
-    Label(resultWindow, text="Motor Speed", bg='black', fg='yellow').grid(row=3, column=1)
-    Label(resultWindow, text=Speed, bg='black', fg='yellow').grid(row=3, column=2)
-    Label(resultWindow, text="RPM", bg='black', fg='yellow').grid(row=3, column=3)  # Correct if unit is not 'mm'
+    # Configure the Canvas
+    myCanvas.configure(yscrollcommand=myScrollbar.set)
+    myCanvas.bind('Configure', lambda e: myCanvas.configure(scrollregion=myCanvas.bbox("all")))
 
-    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=4, column=2)
+    # create a second Frame
+    subFrame = Frame(myCanvas)
 
-    Label(resultWindow, text="Transmission Unit Results", bg='black', fg='yellow').grid(row=5, column=2)
+    # Add that new frame to the window in the Canvas
+    myCanvas.create_window((0, 0), window=subFrame)
 
-    Label(resultWindow, text="Amin", bg='black', fg='yellow').grid(row=6, column=1)
-    Label(resultWindow, text='%.2f' % Amin, bg='black', fg='yellow').grid(row=6, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=6, column=3)  # Correct if unit is not 'mm'
+    # Define Image
+    bgIMG = PhotoImage(file="Tech_Background.png")
+    fgIMG = PhotoImage(file="Transmission Unit.png")
 
-    Label(resultWindow, text="Amax", bg='black', fg='yellow').grid(row=7, column=1)
-    Label(resultWindow, text='%.2f' % Amax, bg='black', fg='yellow').grid(row=7, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=7, column=3)  # Correct if unit is not 'mm'
+    # Set Image in Canvas
+    myCanvas.create_image(0, 0, image=bgIMG, anchor="nw")
+    myCanvas.create_image(600, 15, image=fgIMG, anchor="nw")
 
-    Label(resultWindow, text="B", bg='black', fg='yellow').grid(row=8, column=1)
-    Label(resultWindow, text='%.2f' % B, bg='black', fg='yellow').grid(row=8, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=8, column=3)  # Correct if unit is not 'mm'
+    # Assumptions Window starts here
+    myCanvas.create_text(700, 300, text="Assumptions", font=("Helvetica", 18, "bold"), fill="white")
 
-    Label(resultWindow, text="C", bg='black', fg='yellow').grid(row=9, column=1)
-    Label(resultWindow, text='%.2f' % C, bg='black', fg='yellow').grid(row=9, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=9, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 330, text="Mechanical Efficiency", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 330, text=Mech_efficiency, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 330, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 330, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="E", bg='black', fg='yellow').grid(row=10, column=1)
-    Label(resultWindow, text='%.2f' % Eo, bg='black', fg='yellow').grid(row=10, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=10, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 350, text="Volumetric Efficiency", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 350, text=Volumetric_Efficiency, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 350, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 350, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="G", bg='black', fg='yellow').grid(row=11, column=1)
-    Label(resultWindow, text='%.2f' % G, bg='black', fg='yellow').grid(row=11, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=11, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 370, text="Service Factor", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 370, text=Service_Factor, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 370, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 370, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=12, column=2)
-    Label(resultWindow, text="Pump Unit Results", bg='black', fg='yellow').grid(row=13, column=2)
+    myCanvas.create_text(600, 390, text="Speed", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 390, text=Speed, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 390, text="rpm", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 390, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Gear Module", bg='black', fg='yellow').grid(row=14, column=1)
-    Label(resultWindow, text='%.2f' % Corrected_Standard_Module, bg='black', fg='yellow').grid(row=14, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=14, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 410, text="Gear Profile", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 410, text="Involute Full Depth", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 410, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 410, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Outer Diameter Do", bg='black', fg='yellow').grid(row=15, column=1)
-    Label(resultWindow, text='%.2f' % New_Outer_Diameter_Do, bg='black', fg='yellow').grid(row=15, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=15, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 430, text="Quality of Gear", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 430, text="Precision Cut", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 430, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 430, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Root Diameter Dr", bg='black', fg='yellow').grid(row=16, column=1)
-    Label(resultWindow, text='%.2f' % Root_Diameter_Df, bg='black', fg='yellow').grid(row=16, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=16, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 450, text="Type of Meshing", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 450, text="Sn gearing", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 450, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 450, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Pitch Diameter D", bg='black', fg='yellow').grid(row=17, column=1)
-    Label(resultWindow, text='%.2f' % Pitch_Diameter_D, bg='black', fg='yellow').grid(row=17, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=17, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 470, text="Gear Type", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 470, text="Spur Gear", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 470, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 470, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Width", bg='black', fg='yellow').grid(row=18, column=1)
-    Label(resultWindow, text='%.2f' % New_width, bg='black', fg='yellow').grid(row=18, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=18, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 490, text="Gear Ratio", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 490, text=Gear_Ratio, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 490, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 490, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Clearance", bg='black', fg='yellow').grid(row=19, column=1)
-    Label(resultWindow, text='%.2f' % Clearance, bg='black', fg='yellow').grid(row=19, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=19, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 510, text="Pressure Angle", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 510, text=Pressure_Angle, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 510, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 510, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Tangential Load", bg='black', fg='yellow').grid(row=20, column=1)
-    Label(resultWindow, text='%.2f' % Tangential_Load, bg='black', fg='yellow').grid(row=20, column=2)
-    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=20, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 530, text="No. of Teeth", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 530, text=No_Teeth, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 530, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 530, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Radial Load", bg='black', fg='yellow').grid(row=21, column=1)
-    Label(resultWindow, text='%.2f' % Radial_Load, bg='black', fg='yellow').grid(row=21, column=2)
-    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=21, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 550, text="Clearance Shaft", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 550, text=Clearance_Shaft, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 550, text="mm", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 550, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Hydraulic Force", bg='black', fg='yellow').grid(row=22, column=1)
-    Label(resultWindow, text='%.2f' % Hydraulic_Force, bg='black', fg='yellow').grid(row=22, column=2)
-    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=22, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 570, text="Shear Stress(PSG)", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 570, text=Shear_Stress_PSG, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 570, text="N/mm2", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 570, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Resultant Force", bg='black', fg='yellow').grid(row=23, column=1)
-    Label(resultWindow, text='%.2f' % Resultant_Force, bg='black', fg='yellow').grid(row=23, column=2)
-    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=23, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 590, text="Tensile Stress Casing", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 590, text=Tensile_Stress_Casing, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 590, text="N/mm2", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 590, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=23, column=2)
+    myCanvas.create_text(600, 610, text="FoS for Casing", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 610, text=FoS_Casing, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 610, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 610, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Radial Force", bg='black', fg='yellow').grid(row=24, column=1)
-    Label(resultWindow, text='%.2f' % Radial_Force, bg='black', fg='yellow').grid(row=24, column=2)
-    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=24, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 630, text="Stiffness Tighting", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 630, text=Stiffness_Tighting, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 630, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 630, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="LMR", bg='black', fg='yellow').grid(row=25, column=1)
-    Label(resultWindow, text=Lmr, bg='black', fg='yellow').grid(row=25, column=2)
-    Label(resultWindow, text="millions", bg='black', fg='yellow').grid(row=25, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 650, text="Stiffness External", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 650, text=Stiffness_External, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 650, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 650, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Equivalent Load Peq", bg='black', fg='yellow').grid(row=26, column=1)
-    Label(resultWindow, text='%.2f' % Peq, bg='black', fg='yellow').grid(row=26, column=2)
-    Label(resultWindow, text="kN", bg='black', fg='yellow').grid(row=26, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 670, text="Velocity of Suction", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 670, text=Velocity_Suction, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 670, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 670, text="", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Dynamic Load Capacity", bg='black', fg='yellow').grid(row=27, column=1)
-    Label(resultWindow, text='%.2f' % C_inkgf, bg='black', fg='yellow').grid(row=27, column=2)
-    Label(resultWindow, text="kgf", bg='black', fg='yellow').grid(row=27, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 690, text="Velocity of Delivery", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 690, text=Velocity_Delivery, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 690, text="", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 690, text="", font=("Helvetica", 12), fill="white")
+    # Assumptions Window ends here
 
-    Label(resultWindow, text="Bearing Type/Name", bg='black', fg='yellow').grid(row=28, column=1)
-    Label(resultWindow, text=Bearing, bg='black', fg='yellow').grid(row=28, column=2)
-    Label(resultWindow, text=" ", bg='black', fg='yellow').grid(row=28, column=3)  # Correct if unit is not 'mm'
+    # Results Window starts here
+    myCanvas.create_text(700, 730, text="Design Results", font=("Helvetica", 18, "bold"), fill="white")
 
-    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=29, column=2)
+    myCanvas.create_text(700, 760, text="Drive Unit Results", font=("Helvetica", 12, "bold"), fill="white")
 
-    Label(resultWindow, text="Coupling Number", bg='black', fg='yellow').grid(row=30, column=1)
-    Label(resultWindow, text=Coupling_No, bg='black', fg='yellow').grid(row=30, column=2)
-    Label(resultWindow, text=" ", bg='black', fg='yellow').grid(row=30, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 780, text="Standard Motor", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 780, text=Velocity_Delivery, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 780, text="kW", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="KW per 100RPM", bg='black', fg='yellow').grid(row=31, column=1)
-    Label(resultWindow, text='%.2f' % KW_per_100_RPM, bg='black', fg='yellow').grid(row=31, column=2)
+    myCanvas.create_text(600, 800, text="Motor Speed", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 800, text=Speed, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 800, text="RPM", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text=" ", bg='black', fg='yellow').grid(row=31, column=3)  # Correct if unit is not 'mm'
-    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=32, column=2)
+    myCanvas.create_text(700, 830, text="Transmission Unit Results", font=("Helvetica", 12, "bold"), fill="white")
 
-    Label(resultWindow, text="Casing Thickness", bg='black', fg='yellow').grid(row=33, column=1)
-    Label(resultWindow, text='%.2f' % Final_Thickness_Casing, bg='black', fg='yellow').grid(row=33, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=33, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 850, text="Amin", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 850, text='%.2f' % Amin, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 850, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Bolts PCD (Casing)", bg='black', fg='yellow').grid(row=34, column=1)
-    Label(resultWindow, text='%.2f' % PCD_casing, bg='black', fg='yellow').grid(row=34, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=34, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 870, text="Amax", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 870, text='%.2f' % Amax, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 870, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Outer Diameter of casing", bg='black', fg='yellow').grid(row=35, column=1)
-    Label(resultWindow, text='%.2f' % Outer_Diameter_Casing, bg='black', fg='yellow').grid(row=35, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=35, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 890, text="B", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 890, text='%.2f' % B, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 890, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=36, column=2)
+    myCanvas.create_text(600, 910, text="C", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 910, text='%.2f' % C, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 910, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Bolts Projected Area", bg='black', fg='yellow').grid(row=37, column=1)
-    Label(resultWindow, text='%.2f' % Projected_Area, bg='black', fg='yellow').grid(row=37, column=2)
-    Label(resultWindow, text="mm2", bg='black', fg='yellow').grid(row=37, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 930, text="E", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 930, text='%.2f' % Eo, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 930, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="External Force", bg='black', fg='yellow').grid(row=38, column=1)
-    Label(resultWindow, text='%.2f' % External_Force_Fe, bg='black', fg='yellow').grid(row=38, column=2)
-    Label(resultWindow, text="N", bg='black', fg='yellow').grid(row=38, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 950, text="G", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 950, text='%.2f' % G, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 950, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Openning Force", bg='black', fg='yellow').grid(row=39, column=1)
-    Label(resultWindow, text='%.2f' % Opening_Force_Fo, bg='black', fg='yellow').grid(row=39, column=2)
-    Label(resultWindow, text="N", bg='black', fg='yellow').grid(row=39, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(700, 980, text="Pump Unit Results", font=("Helvetica", 12, "bold"), fill="white")
 
-    Label(resultWindow, text="Initial Tightening Load", bg='black', fg='yellow').grid(row=40, column=1)
-    Label(resultWindow, text='%.2f' % Initial_Tightening_Force_Fi, bg='black', fg='yellow').grid(row=40, column=2)
-    Label(resultWindow, text="N", bg='black', fg='yellow').grid(row=40, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 1000, text="Gear Module", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1000, text='%.2f' % Corrected_Standard_Module, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1000, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Net Force on Bolt", bg='black', fg='yellow').grid(row=41, column=1)
-    Label(resultWindow, text='%.2f' % Net_Force_Bolt_Fb, bg='black', fg='yellow').grid(row=41, column=2)
-    Label(resultWindow, text="N", bg='black', fg='yellow').grid(row=41, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 1020, text="Outer Diameter Do", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1020, text='%.2f' % New_Outer_Diameter_Do, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1020, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Number of Bolts", bg='black', fg='yellow').grid(row=42, column=1)
-    Label(resultWindow, text=PCD_Holes, bg='black', fg='yellow').grid(row=42, column=2)
-    Label(resultWindow, text="", bg='black', fg='yellow').grid(row=42, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 1040, text="Root Diameter Dr", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1040, text='%.2f' % Root_Diameter_Df, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1040, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="         ", bg='black', fg='yellow').grid(row=43, column=2)
+    myCanvas.create_text(600, 1060, text="Pitch Diameter D", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1060, text='%.2f' % Pitch_Diameter_D, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1060, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Piping Unit", bg='black', fg='yellow').grid(row=44, column=2)
+    myCanvas.create_text(600, 1080, text="Width", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1080, text='%.2f' % New_width, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1080, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Suction Pipe Diameter", bg='black', fg='yellow').grid(row=45, column=1)
-    Label(resultWindow, text='%.2f' % Corrected_Pipe_Dia_mm, bg='black', fg='yellow').grid(row=45, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=45, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 1100, text="Clearance", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1100, text='%.2f' % Clearance, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1100, text="mm", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Suction Velocity", bg='black', fg='yellow').grid(row=46, column=1)
-    Label(resultWindow, text='%.2f' % Actual_Suction_Velocity, bg='black', fg='yellow').grid(row=46, column=2)
-    Label(resultWindow, text="m/s", bg='black', fg='yellow').grid(row=46, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 1120, text="Tangential Load", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1120, text='%.2f' % Tangential_Load, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1120, text="kN", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Delivery Pipe Diameter", bg='black', fg='yellow').grid(row=47, column=1)
-    Label(resultWindow, text='%.2f' % Corrected_Pipe_Dia_mm2, bg='black', fg='yellow').grid(row=47, column=2)
-    Label(resultWindow, text="mm", bg='black', fg='yellow').grid(row=47, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 1140, text="Radial Load", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1140, text='%.2f' % Radial_Load, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1140, text="kN", font=("Helvetica", 12), fill="white")
 
-    Label(resultWindow, text="Delivery Velocity", bg='black', fg='yellow').grid(row=48, column=1)
-    Label(resultWindow, text='%.2f' % Actual_Delivery_Velocity, bg='black', fg='yellow').grid(row=48, column=2)
-    Label(resultWindow, text="m/s", bg='black', fg='yellow').grid(row=48, column=3)  # Correct if unit is not 'mm'
+    myCanvas.create_text(600, 1160, text="Hydraulic Force", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1160, text='%.2f' % Hydraulic_Force, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1160, text="kN", font=("Helvetica", 12), fill="white")
 
-    resWinclose = Button(resultWindow, text="Exit", bg='cyan', fg='black', height=2, width=10,
-                         command=lambda: Root3.destroy())
-    resWinclose.grid(row=49, column=2)
+    myCanvas.create_text(600, 1180, text="Resultant Force", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1180, text='%.2f' % Resultant_Force, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1180, text="kN", font=("Helvetica", 12), fill="white")
 
-    Root5 = Tk()
-    Root5.title("Actual V/S PSG Stresses")
-    Root5.configure(bg='black')
+    myCanvas.create_text(600, 1200, text="Radial Force", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1200, text='%.2f' % Radial_Force, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1200, text="kN", font=("Helvetica", 12), fill="white")
 
-    stress_compare = Frame(Root5, bg='black')
-    stress_compare.grid(column=0, row=0, sticky=(N, W, E, S))
-    stress_compare.columnconfigure(0, weight=1)
-    stress_compare.rowconfigure(0, weight=1)
-    stress_compare.pack(pady=60, padx=50)  # controls fixed gap in between main content and edges, pady for y padx for x
+    myCanvas.create_text(600, 1220, text="LMR", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1220, text=Lmr, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1220, text="millions", font=("Helvetica", 12), fill="white")
 
-    Label(stress_compare, text="Bending Stress needed to Bend Gear is    ", bg='black', fg='yellow').grid(row=1, column=1)
-    Label(stress_compare, text='%.2f' % Actual_Bending_Stress, bg='black', fg='yellow').grid(row=1, column=2)
-    Label(stress_compare, text="   which is less than    ", bg='black', fg='yellow').grid(row=1, column=3)
-    Label(stress_compare, text='%.2f' % Bending_stress, bg='black', fg='yellow').grid(row=1, column=4)
+    myCanvas.create_text(600, 1240, text="Equivalent Load Peq", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1240, text='%.2f' % Peq, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1240, text="kN", font=("Helvetica", 12), fill="white")
 
-    Label(stress_compare, text="Dynamic load in gear is      ", bg='black', fg='yellow').grid(row=2, column=1)
-    Label(stress_compare, text='%.2f' % Dynamic_Force, bg='black', fg='yellow').grid(row=2, column=2)
-    Label(stress_compare, text="   which is less than    ", bg='black', fg='yellow').grid(row=2, column=3)
-    Label(stress_compare, text='%.2f' % Static_Force, bg='black', fg='yellow').grid(row=2, column=4)
+    myCanvas.create_text(600, 1260, text="Dynamic Load Capacity", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1260, text='%.2f' % C_inkgf, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1260, text="kgf", font=("Helvetica", 12), fill="white")
 
-    Label(stress_compare, text="Induced Contact Stress for Pitting failure is     ", bg='black', fg='yellow').grid(row=3, column=1)
-    Label(stress_compare, text='%.2f' % Actual_Tensile_Stress, bg='black', fg='yellow').grid(row=3, column=2)
-    Label(stress_compare, text="   which is less than    ", bg='black', fg='yellow').grid(row=3, column=3)
-    Label(stress_compare, text='%.2f' % Tensile_Stress, bg='black', fg='yellow').grid(row=3, column=4)
+    myCanvas.create_text(600, 1280, text="Bearing Type/Name", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1280, text=Bearing, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1280, text=" ", font=("Helvetica", 12), fill="white")
 
-    Label(stress_compare, text="Shear stress needed to shear shaft is    ", bg='black', fg='yellow').grid(row=4, column=1)
-    Label(stress_compare, text='%.2f' % Shear_Stress_Actual, bg='black', fg='yellow').grid(row=4, column=2)
-    Label(stress_compare, text="   which is less than    ", bg='black', fg='yellow').grid(row=4, column=3)
-    Label(stress_compare, text='%.2f' % Shear_Stress_PSG, bg='black', fg='yellow').grid(row=4, column=4)
+    myCanvas.create_text(600, 1300, text="Coupling Number", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1300, text=Coupling_No, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1300, text=" ", font=("Helvetica", 12), fill="white")
 
-    Label(stress_compare, text=" ", bg='black', fg='yellow').grid(row=5, column=2)
+    myCanvas.create_text(600, 1320, text="KW per 100RPM", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1320, text='%.2f' % KW_per_100_RPM, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1320, text=" ", font=("Helvetica", 12), fill="white")
 
-    Label(stress_compare, text="Sucessfully completed all Tests", bg='black', fg='yellow').grid(row=6, column=2)
+    myCanvas.create_text(600, 1340, text="Casing Thickness", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1340, text='%.2f' % Final_Thickness_Casing, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1340, text="mm", font=("Helvetica", 12), fill="white")
 
-    plotButton = Button(stress_compare, text="Plot", bg='cyan', fg='black', height=2, width=10, command=lambda: plot())
-    plotButton.grid(row=7, column=1, pady=10)
+    myCanvas.create_text(600, 1360, text="Bolts PCD (Casing)", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1360, text='%.2f' % PCD_casing, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1360, text="mm", font=("Helvetica", 12), fill="white")
 
-    root5close = Button(stress_compare, text="Exit", bg='cyan', fg='black', height=2, width=10,
-                        command=lambda: Root5.destroy())
-    root5close.grid(row=7, column=3, pady=10)
+    myCanvas.create_text(600, 1380, text="Outer Diameter of casing", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1380, text='%.2f' % Outer_Diameter_Casing, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1380, text="mm", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(600, 1400, text="Bolts Projected Area", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1400, text='%.2f' % Projected_Area, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1400, text="mm2", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(600, 1420, text="External Force", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1420, text='%.2f' % External_Force_Fe, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1420, text="N", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(600, 1440, text="Openning Force", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1440, text='%.2f' % Opening_Force_Fo, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1440, text="N", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(600, 1460, text="Initial Tightening Load", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1460, text='%.2f' % Initial_Tightening_Force_Fi, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1460, text="N", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(600, 1480, text="Net Force on Bolt", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1480, text='%.2f' % Net_Force_Bolt_Fb, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1480, text="N", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(600, 1500, text="Number of Bolts", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1500, text=PCD_Holes, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1500, text="", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(700, 1530, text="Piping Unit", font=("Helvetica", 12, "bold"), fill="white")
+
+    myCanvas.create_text(600, 1550, text="Suction Pipe Diameter", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1550, text='%.2f' % Corrected_Pipe_Dia_mm, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1550, text="mm", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(600, 1580, text="Suction Velocity", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1580, text='%.2f' % Actual_Suction_Velocity, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1580, text="m/s", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(600, 1600, text="Delivery Pipe Diameter", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1600, text='%.2f' % Corrected_Pipe_Dia_mm2, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1600, text="mm", font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(600, 1620, text="Delivery Velocity", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1620, text='%.2f' % Actual_Delivery_Velocity, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1620, text="m/s", font=("Helvetica", 12), fill="white")
+    # Results Window ends here
+
+    # Actual Vs. PSG Window starts here
+    myCanvas.create_text(700, 1670, text="Actual Vs. PSG Stress", font=("Helvetica", 18, "bold"), fill="white")
+
+    myCanvas.create_text(550, 1700, text="Bending Stress needed to Bend Gear is", font=("Helvetica", 12),
+                         fill="white")
+    myCanvas.create_text(730, 1700, text='%.2f' % Actual_Bending_Stress, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1700, text="which is less than", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 1700, text='%.2f' % Bending_stress, font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(550, 1720, text="Dynamic load in gear is", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(730, 1720, text='%.2f' % Dynamic_Force, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1720, text="which is less than", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 1720, text='%.2f' % Static_Force, font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(550, 1750, text="Induced Contact Stress for Pitting failure is", font=("Helvetica", 12),
+                         fill="white")
+    myCanvas.create_text(730, 1750, text='%.2f' % Actual_Tensile_Stress, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1750, text="which is less than", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 1750, text='%.2f' % Tensile_Stress, font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(550, 1770, text="Shear stress needed to shear shaft is", font=("Helvetica", 12),
+                         fill="white")
+    myCanvas.create_text(730, 1770, text='%.2f' % Shear_Stress_Actual, font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(820, 1770, text="which is less than", font=("Helvetica", 12), fill="white")
+    myCanvas.create_text(920, 1770, text='%.2f' % Shear_Stress_PSG, font=("Helvetica", 12), fill="white")
+
+    myCanvas.create_text(700, 1800, text="Sucessfully completed all Tests", font=("Helvetica", 12, "bold"),
+                         fill="white")
+
+    button3 = Button(Root2, text="Plot", bg='cyan', fg='black', height=1, width=8, command=lambda: plot())
+    myCanvas.create_window(600, 1840, anchor="nw", window=button3)
+    button4 = Button(Root2, text="Exit", bg='cyan', fg='black', height=1, width=8, command=lambda: Root2.destroy())
+    myCanvas.create_window(750, 1840, anchor="nw", window=button4)
+    # Actual Vs. PSG Window ends here
 
     def plot():
+        Root4 = tk.Toplevel()
+        Root4.geometry("500x700")
+        Root4.title("Graph of Actual VS. PSG Stress")
+
+        # Define background image
+        bg = PhotoImage(file="Tech_Background.png")
+
+        # Create a Canvas
+        graphCanvas = Canvas(Root4)
+        graphCanvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+        graphCanvas.create_image(0, 0, image=bg, anchor="nw")
+
+        '''
+        difference1 = Bending_stress - Actual_Bending_Stress
+        difference2 = Static_Force - Dynamic_Force
+        difference3 = Tensile_Stress - Actual_Tensile_Stress
+        difference4 = Shear_Stress_PSG - Shear_Stress_Actual
+        '''
         # Setting up dataframe for graph plotting
-        graphData = {'Actual Stress': [Actual_Bending_Stress, Dynamic_Force, Actual_Tensile_Stress, Shear_Stress_Actual],
-                     'Allowable Stress': [Bending_stress, Static_Force, Tensile_Stress, Shear_Stress_PSG]
+        graphData = {'Actual Stress': [Bending_stress - Actual_Bending_Stress, Static_Force - Dynamic_Force,
+                                       Tensile_Stress - Actual_Tensile_Stress, Shear_Stress_PSG - Shear_Stress_Actual],
+                     'Allowable Stress': ["Bending_stress", "Static_Force", "Tensile_Stress", "Shear_Stress_PSG"]
                      }
         graphDataframe = DataFrame(graphData, columns=['Allowable Stress', 'Actual Stress'])
 
         # Ploting the graph
         figure = plt.Figure(figsize=(5, 10), dpi=100)
         ax = figure.add_subplot(111)
-        line = FigureCanvasTkAgg(figure, Root5)
-        line.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, padx=70)
+        line = FigureCanvasTkAgg(figure, graphCanvas)
+        line.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, padx=70)
         graphDataframe = graphDataframe[['Allowable Stress', 'Actual Stress']].groupby('Allowable Stress').sum()
         graphDataframe.plot(kind='line', legend=True, ax=ax, color='r', marker='o', fontsize=10)
         ax.set_title('Allowable Stress Vs. Actual Stress')
 
+        Root4.mainloop()
+
     Root2.mainloop()
-    Root3.mainloop()
-    Root5.mainloop()
 
 
 Root1.mainloop()
